@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-:root {
+@theme {
   /* Azul */
   --color-azul-escuro: #003366;
   --color-azul-claro: #66A3FF;
@@ -23,52 +23,6 @@
   --color-sucesso: #68E168;
 }
 
-/* Background */
-.bg-azul-escuro {
-  background-color: var(--color-azul-escuro);
+.bg-gradiente-azul {
+  background: linear-gradient(var(--color-gradiente-azul-claro-inicio), var(--color-gradiente-azul-claro-fim));
 }
-
-.bg-azul-claro {
-  background-color: var(--color-azul-claro);
-}
-
-.bg-gradiente-azul-claro {
-  background: linear-gradient(to right, var(--color-gradiente-azul-claro-inicio), var(--color-gradiente-azul-claro-fim));
-}
-
-.bg-fundo-principal {
-  background-color: var(--color-fundo-principal);
-}
-
-.bg-azul-grafico {
-  background-color: var(--color-azul-grafico);
-}
-
-.bg-roxo-grafico {
-  background-color: var(--color-roxo-grafico);
-}
-
-.bg-magenta-grafico {
-  background-color: var(--color-magenta-grafico);
-}
-
-.bg-branco {
-  background-color: var(--color-branco);
-}
-
-.bg-preto {
-  background-color: var(--color-preto);
-}
-
-.bg-cinza-claro {
-  background-color: var(--color-cinza-claro);
-}
-
-.bg-erro {
-  background-color: var(--color-erro);
-}
-
-.bg-sucesso {
-  background-color: var(--color-sucesso);
-}
-

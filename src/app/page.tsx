@@ -1,6 +1,6 @@
 export default function PageHome() {
   return (
-    <main>
+    <main className="bg-gradiente-azul w-screen h-screen">
       Home
     </main>
   );
