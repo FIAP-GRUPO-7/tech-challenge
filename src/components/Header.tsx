@@ -2,12 +2,14 @@
 
 import Image from 'next/image'
 import Logo from "@/shared/assets/Logo.svg"
-import Link from 'next/link'
 import { useState } from 'react'
-import RegisterModal from './RegisterModal'
+import RegisterModal from './modal/RegisterModal'
+import LoginModal from './modal/LoginModal'
 
 export const Header = () => {
     const [showModalRegister, setShowModalRegister] = useState(false);
+    const [showModalLogin, setShowModalLogin] = useState(false);
+
     return (
        <>
          <nav className="flex items-center justify-around  py-4 bg-black text-sm">
@@ -24,12 +26,13 @@ export const Header = () => {
                  <button onClick={() => setShowModalRegister(true)} className="flex justify-center py-2 px-4 font-semibold rounded-md border-branco bg-branco">
                     Abrir minha conta
                 </button>
-                <Link href={''} className="flex justify-center py-2 px-7 font-semibold rounded-md border-1 bg-preto text-branco">
+                <button onClick={() => setShowModalLogin(true)}  className="flex justify-center py-2 px-7 font-semibold rounded-md border-1 bg-preto text-branco">
                     Já tenho conta
-                </Link>
+                </button>
             </div>
         </nav>
         {showModalRegister && <RegisterModal onClose={() => setShowModalRegister(false)} />}
+        {showModalLogin && <LoginModal onClose={() => setShowModalLogin(false)} />}
        </>
     )
 }

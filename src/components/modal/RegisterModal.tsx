@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-import Login from "@/shared/assets/Ilustração Login.svg";
+import Login from "@/shared/assets/Login.svg";
 import Image from "next/image";
 
 interface RegisterModalProps {
