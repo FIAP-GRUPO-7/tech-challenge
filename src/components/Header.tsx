@@ -7,7 +7,7 @@ import { useState } from 'react'
 import RegisterModal from './RegisterModal'
 
 export const Header = () => {
-    const [showModal, setShowModal] = useState(false);
+    const [showModalRegister, setShowModalRegister] = useState(false);
     return (
        <>
          <nav className="flex items-center justify-around  py-4 bg-black text-sm">
@@ -21,7 +21,7 @@ export const Header = () => {
                 </li>
             </ul>
             <div className="flex items-center gap-6">
-                 <button onClick={() => setShowModal(true)} className="flex justify-center py-2 px-4 font-semibold rounded-md border-branco bg-branco">
+                 <button onClick={() => setShowModalRegister(true)} className="flex justify-center py-2 px-4 font-semibold rounded-md border-branco bg-branco">
                     Abrir minha conta
                 </button>
                 <Link href={''} className="flex justify-center py-2 px-7 font-semibold rounded-md border-1 bg-preto text-branco">
@@ -29,7 +29,7 @@ export const Header = () => {
                 </Link>
             </div>
         </nav>
-        {showModal && <RegisterModal onClose={() => setShowModal(false)} />}
+        {showModalRegister && <RegisterModal onClose={() => setShowModalRegister(false)} />}
        </>
     )
 }
