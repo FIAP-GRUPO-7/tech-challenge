@@ -2,12 +2,15 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import Cadastro from "@/shared/assets/Cadastro.svg";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface LoginModalProps {
   onClose: () => void;
 }
 
 export default function LoginModal({ onClose }: LoginModalProps) {
+  const router = useRouter();
+
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -55,8 +58,8 @@ export default function LoginModal({ onClose }: LoginModalProps) {
       });
       return;
     }
-    console.log("Usuário logado:", user);
     onClose();
+    router.push("/dashboard");
   };
 
   return (

@@ -7,6 +7,7 @@ interface RegisterModalProps {
 }
 
 export default function RegisterModal({ onClose }: RegisterModalProps) {
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -70,9 +71,8 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
       terms: form.terms,
     });
     localStorage.setItem("users", JSON.stringify(users));
-
-    console.log("Usuário cadastrado:", form);
     onClose();
+    alert("Usuário cadastrado com sucesso!");
   };
 
   return (
