@@ -37,10 +37,10 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
     const newErrors = {
       name: form.name ? "" : "Nome é obrigatório.",
       email: !form.email
-      ? "Email é obrigatório."
-      : !form.email.includes("@")
-      ? "Email não é válido."
-      : "",
+        ? "Email é obrigatório."
+        : !form.email.includes("@")
+        ? "Email não é válido."
+        : "",
       password: form.password ? "" : "Senha é obrigatória.",
       terms: form.terms ? "" : "Você deve aceitar os termos.",
     };
@@ -51,7 +51,27 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validate()) return;
-    console.log("Formulário enviado:", form);
+
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+
+    const exists = users.some((u: any) => u.email === form.email);
+    if (exists) {
+      setErrors((prev) => ({
+        ...prev,
+        email: "Já existe um usuário com este email.",
+      }));
+      return;
+    }
+
+    users.push({
+      name: form.name,
+      email: form.email,
+      password: form.password,
+      terms: form.terms,
+    });
+    localStorage.setItem("users", JSON.stringify(users));
+
+    console.log("Usuário cadastrado:", form);
     onClose();
   };
 
