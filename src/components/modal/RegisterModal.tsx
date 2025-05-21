@@ -36,7 +36,11 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
   const validate = () => {
     const newErrors = {
       name: form.name ? "" : "Nome é obrigatório.",
-      email: form.email ? "" : "Email é obrigatório.",
+      email: !form.email
+      ? "Email é obrigatório."
+      : !form.email.includes("@")
+      ? "Email não é válido."
+      : "",
       password: form.password ? "" : "Senha é obrigatória.",
       terms: form.terms ? "" : "Você deve aceitar os termos.",
     };
@@ -52,7 +56,7 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
       <div className="bg-fundo-principal w-full max-w-md p-6 relative shadow-lg h-screen overflow-y-auto">
         <button
           onClick={onClose}
@@ -96,7 +100,7 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
             <input
               id="email"
               name="email"
-              type="email"
+              type="text"
               placeholder="Digite seu email"
               value={form.email}
               onChange={handleChange}

@@ -28,7 +28,7 @@ export default function LoginModal({ onClose }: LoginModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
       <div className="bg-fundo-principal w-full max-w-md p-6 relative shadow-lg h-screen">
         <button
           onClick={onClose}
