@@ -42,7 +42,20 @@ export default function LoginModal({ onClose }: LoginModalProps) {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validate()) return;
-    console.log("Formulário enviado:", form);
+
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+    const user = users.find(
+      (u: any) => u.email === form.email && u.password === form.password
+    );
+
+    if (!user) {
+      setErrors({
+        email: "Email ou senha inválidos.",
+        password: "Email ou senha inválidos.",
+      });
+      return;
+    }
+
     onClose();
   };
 
