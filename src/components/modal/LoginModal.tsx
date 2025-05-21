@@ -55,7 +55,7 @@ export default function LoginModal({ onClose }: LoginModalProps) {
       });
       return;
     }
-
+    console.log("Usuário logado:", user);
     onClose();
   };
 
