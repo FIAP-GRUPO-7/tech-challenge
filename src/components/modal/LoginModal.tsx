@@ -1,7 +1,7 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import Cadastro from "@/shared/assets/Cadastro.svg";
 import Image from "next/image";
-import Link from 'next/link'
+import Link from "next/link";
 
 interface LoginModalProps {
   onClose: () => void;
@@ -9,6 +9,11 @@ interface LoginModalProps {
 
 export default function LoginModal({ onClose }: LoginModalProps) {
   const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [errors, setErrors] = useState({
     email: "",
     password: "",
   });
@@ -21,8 +26,22 @@ export default function LoginModal({ onClose }: LoginModalProps) {
     }));
   };
 
+  const validate = () => {
+    const newErrors = {
+      email: !form.email
+        ? "Email é obrigatório."
+        : !form.email.includes("@")
+        ? "Email não é válido."
+        : "",
+      password: form.password ? "" : "Senha é obrigatória.",
+    };
+    setErrors(newErrors);
+    return Object.values(newErrors).every((err) => !err);
+  };
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!validate()) return;
     console.log("Formulário enviado:", form);
     onClose();
   };
@@ -55,13 +74,17 @@ export default function LoginModal({ onClose }: LoginModalProps) {
             <input
               id="email"
               name="email"
-              type="email"
-              required
+              type="text"
               placeholder="Digite seu email"
               value={form.email}
               onChange={handleChange}
-              className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white"
+              className={`mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white ${
+                errors.email ? "border-erro" : "border-cinza-claro"
+              }`}
             />
+            {errors.email && (
+              <p className="text-erro text-xs mt-1">{errors.email}</p>
+            )}
           </div>
 
           <div>
@@ -72,15 +95,21 @@ export default function LoginModal({ onClose }: LoginModalProps) {
               id="password"
               name="password"
               type="password"
-              required
               placeholder="Digite sua senha"
               value={form.password}
               onChange={handleChange}
-              className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white"
+              className={`mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white ${
+                errors.password ? "border-erro" : "border-cinza-claro"
+              }`}
             />
+            {errors.password && (
+              <p className="text-erro text-xs mt-1">{errors.password}</p>
+            )}
           </div>
 
-          <Link href="" className="text-xs text-sucesso">Esqueci a senha?</Link>
+          <Link href="" className="text-xs text-sucesso">
+            Esqueci a senha?
+          </Link>
 
           <div className="flex justify-center mt-8">
             <button
