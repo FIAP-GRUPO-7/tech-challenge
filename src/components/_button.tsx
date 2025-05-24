@@ -1,11 +1,14 @@
 import React from "react";
 import { IoCheckmarkSharp } from "react-icons/io5";
 
-type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  hasIcon?: boolean;
+};
 
 export const Button: React.FC<ButtonProps> = ({
   children,
   className = "",
+  hasIcon = false,
   ...rest
 }) => {
   return (
@@ -14,7 +17,7 @@ export const Button: React.FC<ButtonProps> = ({
       {...rest}
     >
       {children}
-      <IoCheckmarkSharp className="fill-white" size={20} />
+      {hasIcon && <IoCheckmarkSharp className="fill-white" size={20} />}
     </button>
   );
 };

@@ -43,14 +43,14 @@ export default function PageHome() {
   const [show, setShow] = useState(false);
   return (
     <div className="w-full flex flex-col xl:flex-row col-span-5 gap-4">
-      <div className="flex flex-col flex-1 gap-4">
-        <div className="w-full h-[406px] bg-azul-escuro rounded-md p-6 flex">
+      <div className="flex flex-col flex-wrap flex-1 gap-4">
+        <div className="w-full bg-azul-escuro rounded-md p-6 flex gap-4 flex-col sm:flex-row sm:h-[406px]">
           <div className="flex flex-col gap-6 flex-1">
             <h2 className="text-2xl text-white">Olá, Joana! :)</h2>
             <p className="text-white">Quinta-feira, 08/09/2024</p>
           </div>
-          <div className="flex-1 flex justify-center relative">
-            <div className="w-[180px] absolute top-[75px]">
+          <div className="flex-1 flex sm:justify-center sm:relative">
+            <div className="w-[180px] sm:absolute sm:top-[75px]">
               <div className="border-white border-b-2 py-4">
                 <h3 className="text-xl text-white flex items-center gap-6">
                   <span>Saldo</span>
@@ -98,15 +98,15 @@ export default function PageHome() {
                   placeholder="00,00"
                 />
               </div>
-              <Button className="w-full max-w-[250px] h-[48px]">
+              <Button className="w-full max-w-[250px] h-[48px]" hasIcon>
                 Concluir transação
               </Button>
             </div>
           </form>
         </div>
       </div>
-      <div className=" max-h-max bg-white rounded-md px-6 py-8 xl:w-[282px] md:px-8 lg:px-36  xl:px-8">
-        <div className="flex justify-between items-center mb-6">
+      <div className="max-h-max bg-white rounded-md px-6 py-8 xl:w-[282px] md:px-8 lg:px-36  xl:px-8">
+        <div className="flex justify-between items-center mb-6 gap-4 flex-wrap">
           <h4 className="text-2xl font-bold">Extrato</h4>
           <div className="flex gap-2">
             <RoundedButton>
@@ -121,7 +121,7 @@ export default function PageHome() {
           {extracts.map((extract) => {
             return (
               <div
-                className="flex justify-between items-center"
+                className="flex justify-between items-center flex-wrap-reverse"
                 key={extract.id}
               >
                 <div className="flex-1 flex flex-col gap-2 border-b-1 border-sucesso pb-2">

@@ -1,5 +1,6 @@
 "use client";
 
+import { DropdownMenu } from "@/components/_dropmenu";
 import { HamburgerSidebar, Sidebar } from "@/components/_sidebar";
 import { useSidebar } from "@/hooks/sidebar";
 import Image from "next/image";
@@ -22,15 +23,17 @@ export default function DashboardLayout({
           <HamburgerSidebar show={show} onClose={onClose} />
         </div>
         <div className="flex items-center gap-4">
-          <Image
-            src="/avatar-fallback.svg"
-            alt="avatar-fallback"
-            width={54}
-            height={54}
-          />
+          <DropdownMenu>
+            <Image
+              src="/avatar-fallback.svg"
+              alt="avatar-fallback"
+              width={54}
+              height={54}
+            />
+          </DropdownMenu>
         </div>
       </header>
-      <main className="flex-1 pt-4 flex flex-col gap-4 px-16 xl:flex-row lg:px-48 xl:64">
+      <main className="flex-1 pt-4 flex flex-col gap-4 px-4 xl:flex-row sm:px-16 lg:px-48 xl:64">
         <Sidebar />
         {children}
       </main>

@@ -27,7 +27,7 @@ const settings = [
 export const Sidebar = () => {
   const pathname = usePathname();
   return (
-    <aside className="rounded-md py-4 xl:w-[180px] xl:bg-white hidden md:block">
+    <aside className="rounded-md py-4 xl:min-w-[180px] xl:bg-white hidden md:block">
       <nav>
         <ul className="px-6 flex  flex-wrap justify-between xl:flex-col xl:w-full xl:text-center">
           {settings.map((navItem, index) => {
