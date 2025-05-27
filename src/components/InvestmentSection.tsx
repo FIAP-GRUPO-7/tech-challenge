@@ -3,7 +3,7 @@ import InvestmentChart from './InvestmentChart'
 export default function InvestmentSection() {
   return (
     <section className="bg-cinza-escuro p-6 rounded-xl">
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 text-center md:text-left">
         <h2 className="text-lg font-semibold">Investimentos</h2>
         <p className="text-lg font-inter text-azul-escuro">Total: R$ 50.000,00</p>
       </div>

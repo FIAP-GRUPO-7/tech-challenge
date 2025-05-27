@@ -19,7 +19,7 @@ const chartData = data.filter(item => item.name !== 'Bolsa de Valores')
 
 export default function InvestmentChart() {
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 text-center md:text-left">
       <h3 className="text-lg text-preto">Estatísticas</h3>
       <div className="bg-blue-900 p-4 rounded-xl">
         <div className="md:flex md:items-center md:justify-center md:gap-4">         
