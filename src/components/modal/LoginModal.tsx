@@ -59,7 +59,7 @@ export default function LoginModal({ onClose }: LoginModalProps) {
       return;
     }
     onClose();
-    router.push("/dashboard");
+    router.push("/");
   };
 
   return (
