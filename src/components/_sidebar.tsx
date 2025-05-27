@@ -16,7 +16,7 @@ const settings = [
   },
   {
     label: "Investimentos",
-    value: "/investimentos",
+    value: "/investments",
   },
   {
     label: "Outros serviços",
