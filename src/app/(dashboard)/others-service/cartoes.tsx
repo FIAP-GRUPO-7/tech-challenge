@@ -1,8 +1,8 @@
 //cartoes.tsx
 
 import Head from "next/head";
-import DashboardLayout from "../../components/DashboardLayout";
-import CardsModal from "../../components/CardsModal";
+import DashboardLayout from "../../../components/DashboardLayout";
+import CardsModal from "../../../components/CardsModal";
 
 export default function Cartoes() {
   return (

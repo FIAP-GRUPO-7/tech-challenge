@@ -13,7 +13,7 @@ export default function PageError() {
             <li>E olha que exploramos o universo procurando por ela!</li>
             <li>Que tal voltar e tentar novamente?</li>
           </ul>
-          <Link href={''} className="rounded-md py-2 px-3 font-bold text-branco bg-azul-claro">
+          <Link href={'/home'} className="rounded-md py-2 px-3 font-bold text-branco bg-azul-claro">
             Voltar ao início
           </Link>
         </ul>

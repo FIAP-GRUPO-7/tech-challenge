@@ -1,8 +1,8 @@
 //index.tsx
 
 import Head from "next/head";
-import DashboardLayout from "../../components/DashboardLayout";
-import ServicesModal from "../../components/ServicesModal";
+import DashboardLayout from "../../../components/DashboardLayout";
+import ServicesModal from "../../../components/ServicesModal";
 
 export default function Home() {
   return (
