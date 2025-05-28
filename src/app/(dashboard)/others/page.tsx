@@ -1,7 +1,8 @@
+//index.tsx
+
+import ServicesModal from "../../../components/ServicesModal";
 import { GreetingCard } from "@/components/DashboardComponents";
 import { ExtractList } from "@/components/DashboardComponents";
-import InvestmentSection from "@/components/InvestmentSection";
-
 
 const extracts = [
   {
@@ -34,16 +35,16 @@ const extracts = [
   },
 ];
 
-
 export default function Home() {
-
   return (
-    <div className="w-full flex flex-col xl:flex-row col-span-5 gap-4">
-      <div className="flex flex-col flex-wrap flex-1 gap-4">
-        <GreetingCard name="Joana" date="Quinta-feira, 08/09/2024" />
-        <InvestmentSection />
+    <>
+      <div className="w-full flex flex-col xl:flex-row col-span-5 gap-4">
+        <div className="flex flex-col flex-wrap flex-1 gap-4">
+          <GreetingCard name="Joana" date="Quinta-feira, 08/09/2024" />
+          <ServicesModal />
+        </div>
+        <ExtractList extracts={extracts} />
       </div>
-      <ExtractList extracts={extracts} />
-    </div>
+    </>
   );
 }
