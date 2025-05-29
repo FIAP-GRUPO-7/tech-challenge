@@ -8,7 +8,7 @@ import { IoMdClose } from "react-icons/io";
 const settings = [
   {
     label: "Inicio",
-    value: "/",
+    value: "/home",
   },
   {
     label: "Transferências",
