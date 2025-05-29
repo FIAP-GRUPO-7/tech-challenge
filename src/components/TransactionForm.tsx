@@ -1,18 +1,51 @@
+"use client";
+import { useState } from "react";
 import { Button } from "@/components/_button";
 import { IoMdArrowDropdown } from "react-icons/io";
 
 export default function TransactionForm() {
+  const [type, setType] = useState("");
+  const [value, setValue] = useState("");
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+
+    if (!type || !value) {
+      alert("Preencha todos os campos.");
+      return;
+    }
+
+    const transaction = {
+      id: crypto.randomUUID(),
+      type,
+      value,
+      date: new Date().toLocaleDateString("pt-BR"),
+    };
+
+    const existing = JSON.parse(localStorage.getItem("transactions") || "[]");
+    existing.push(transaction);
+    localStorage.setItem("transactions", JSON.stringify(existing));
+
+    setType("");
+    setValue("");
+
+  }
+
   return (
     <div className="flex-1 bg-cinza-escuro rounded-md p-6 flex flex-col gap-8">
       <h2 className="text-2xl font-bold">Nova Transação</h2>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-8">
           <div className="relative max-w-[355px]">
-            <select className="appearance-none bg-white w-full h-[48px] rounded-md border-2 border-azul-claro px-4 text-text-field">
+            <select
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+              className="appearance-none bg-white w-full h-[48px] rounded-md border-2 border-azul-claro px-4 text-text-field"
+            >
               <option value="">Selecione o tipo de transação</option>
-              <option>Opção 1</option>
-              <option>Opção 2</option>
-              <option>Opção 3</option>
+              <option>Depósito</option>
+              <option>Saque</option>
+              <option>Transferência</option>
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
               <IoMdArrowDropdown size={20} className="fill-azul-escuro" />
@@ -26,11 +59,14 @@ export default function TransactionForm() {
             <input
               id="value"
               type="text"
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
               className="bg-white w-full max-w-[250px] h-[48px] rounded-md border-2 border-azul-claro px-4 text-center text-text-field"
               placeholder="00,00"
             />
           </div>
-          <Button className="w-full max-w-[250px] h-[48px]" hasIcon>
+
+          <Button className="w-full max-w-[250px] h-[48px]" hasIcon type="submit">
             Concluir transação
           </Button>
         </div>
