@@ -20,7 +20,7 @@ const settings = [
   },
   {
     label: "Outros serviços",
-    value: "/other",
+    value: "/others",
   },
 ];
 
