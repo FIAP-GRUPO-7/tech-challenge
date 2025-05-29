@@ -9,13 +9,13 @@ export default function InvestmentSection() {
       </div>
 
       <div className="flex flex-col md:flex-row gap-4 my-4 md:items-stretch items-center">
-        <div className="bg-blue-900 text-white p-4 rounded-lg w-full text-center">
+        <div className="bg-blue-900 text-white p-4 rounded-lg w-full text-center font-inter">
           <p className="text-sm">Renda Fixa</p>
-          <p className="text-xl font-bold">R$ 36.000,00</p>
+          <p className="text-xl text-white font-inter">R$ 36.000,00</p>
         </div>
-        <div className="bg-blue-900 text-white p-4 rounded-lg w-full text-center">
+        <div className="bg-blue-900 text-white p-4 rounded-lg w-full text-center font-inter">
           <p className="text-sm">Renda Variável</p>
-          <p className="text-xl font-bold">R$ 14.000,00</p>
+          <p className="text-xl text-white font-inter">R$ 14.000,00</p>
         </div>
       </div>
       <InvestmentChart />
