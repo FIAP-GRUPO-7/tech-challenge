@@ -91,13 +91,13 @@ const ModalCartoes: React.FC<ModalCartoesProps> = ({ tipo, cartao, onClose }) =>
                             <div className="mt-12 flex justify-center gap-6">
                                 <button
                                     onClick={onClose}
-                                    className="w-[180px] py-2 border-2 border-[var(--color-azul-escuro)] text-[var(--color-azul-escuro)] font-semibold rounded-full hover:bg-[#e9f1ff]"
+                                    className="w-[180px] py-2 border-2 border-[var(--color-azul-escuro)] text-[var(--color-azul-escuro)] font-semibold rounded-md hover:bg-[#e9f1ff] transition-colors duration-200 ease-in-out"
                                 >
                                     Cancelar
                                 </button>
                                 <button
                                     onClick={onClose}
-                                    className="w-[180px] py-2 bg-[var(--color-azul-claro)] text-[var(--color-branco)] font-semibold rounded-full hover:bg-[var(--color-azul-escuro)]"
+                                    className="w-[180px] py-2 bg-[var(--color-azul-escuro)] text-[var(--color-branco)] font-semibold rounded-md hover:bg-[var(--color-azul-claro)] transition-colors duration-200 ease-in-out"
                                 >
                                     Salvar Configurações
                                 </button>
@@ -124,15 +124,15 @@ const ModalCartoes: React.FC<ModalCartoesProps> = ({ tipo, cartao, onClose }) =>
                             <div className="flex justify-center gap-6 mb-10">
                                 <button
                                     onClick={onClose}
-                                    className="w-[180px] py-2 border-2 border-[var(--color-azul-escuro)] text-[var(--color-azul-escuro)] font-semibold rounded-full hover:bg-[#e9f1ff]"
+                                    className="w-[180px] py-2 border-2 border-[var(--color-azul-escuro)] text-[var(--color-azul-escuro)] font-semibold rounded-md hover:bg-[#e9f1ff] transition-colors duration-200 ease-in-out"
                                 >
                                     Cancelar
                                 </button>
                                 <button
                                     onClick={() => setShowConfirmacao(true)}
-                                    className={`w-[180px] py-2 border-2 font-semibold rounded-full ${bloqueado
+                                    className={`w-[180px] py-2 border-2 font-semibold rounded-md ${bloqueado
                                         ? 'border-[var(--color-azul-escuro)] text-[var(--color-azul-escuro)] hover:bg-[#e9f1ff]'
-                                        : 'border-[var(--color-erro)] text-[var(--color-erro)] hover:bg-[#ffe6e6]'
+                                        : 'border-[var(--color-erro)] text-[var(--color-erro)] hover:bg-[#ffe6e6] transition-colors duration-200 ease-in-out'
                                         }`}
                                 >
                                     {bloqueado ? 'Desbloquear' : 'Bloquear'}

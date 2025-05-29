@@ -1,13 +1,10 @@
 //CardsModal.tsx
 'use client'
 import React, { useState } from 'react';
-import Image from 'next/image';
 import ModalCartoes from './ModalCartoes';
 
 
 const CardsModal = () => {
-  const [mostrarSaldo, setMostrarSaldo] = useState(true);
-  const toggleSaldo = () => setMostrarSaldo((prev) => !prev);
 
   const [modalAberto, setModalAberto] = useState(false);
   const [tipoModal, setTipoModal] = useState<'configurar' | 'bloquear' | null>(null);
@@ -26,111 +23,81 @@ const CardsModal = () => {
   };
 
   return (
-    <div className="flex flex-col space-y-6 w-full max-w-[600px] mx-auto">
+    <div className="flex flex-col space-y-6 w-full bg-cinza-escuro rounded-md max-w-[700px] mx-auto">
+      <h2 className="text-xl font-semibold text-[var(--color-preto)] px-4 pt-4">
+        Meus Cartões
+      </h2>
 
-      {/* Modal Azul */}
-      <div className="bg-[var(--color-azul-escuro)] rounded-xl p-6 shadow w-full min-h-[300px] flex flex-col justify-between mt-4 sm:mt-12">
-        <div className="space-y-1">
-          <h2 className="text-[var(--color-branco)] text-xl font-bold">Olá, Joana! :)</h2>
-          <p className="text-[var(--color-branco)] text-sm">Quinta-feira, 08/09/2024</p>
+      {/* Modal cinza */}
+      <div className="flex flex-row w-full gap-10 items-start  p-4 rounded-md">
+        {/* Parte visual do cartão */}
+        <div className="w-[260px] h-[147px] rounded-lg bg-[var(--color-azul-escuro)] p-3 flex flex-col justify-between text-[var(--color-branco)] font-sans italic">
+          <div>
+            <p className="text-base font-bold">Byte</p>
+            <p className="text-[12px] not-italic">Platinum</p>
+          </div>
+          <div>
+            <p className="text-[12px] not-italic">Joana Fonseca Gomes</p>
+            <p className="text-lg tracking-wider">*********</p>
+          </div>
         </div>
 
-        <div className="self-end text-right">
-          <p className="text-[var(--color-branco)] text-center font-medium border-b border-[var(--color-branco)] inline-block pb-1 mb-1">
-            Saldo
-          </p>
-          <p className="text-[var(--color-branco)] text-xs mb-2">Conta Corrente</p>
-          <div className="flex items-center justify-end space-x-2">
-            <span className="text-[var(--color-branco)] text-2xl font-semibold">
-              {mostrarSaldo ? 'R$ 2.500,00' : '*********'}
-            </span>
-            <button onClick={toggleSaldo}>
-              <Image
-                src={`/icons/${mostrarSaldo ? 'olho' : 'olhofechado'}.png`}
-                alt="Mostrar/ocultar saldo"
-                width={20}
-                height={20}
-              />
+        <div className="flex flex-col justify-between">
+          <p className="text-[var(--color-preto)] mb-2">Cartão Físico</p>
+
+          <div className="flex flex-col space-y-1 mb-2">
+            <button
+              onClick={() => abrirModal('configurar', 'fisico')}
+              className="w-[160px] bg-[var(--color-azul-escuro)] hover:bg-[var(--color-azul-claro)] text-[var(--color-branco)] text-sm py-2 px-3 rounded-md transition-colors duration-200 ease-in-out"
+            >
+              Configurar
+            </button>
+
+            <button
+              onClick={() => abrirModal('bloquear', 'fisico')}
+              className="w-[160px] text-[var(--color-erro)] border border-[var(--color-vermelho)] text-sm py-2 px-3 rounded-md hover:bg-[#e999994d] transition-colors duration-200 ease-in-out"
+            >
+              Bloqueio/Desbloqueio
             </button>
           </div>
+
+          <p className="text-[var(--color-preto)] text-xs">Função: Débito/Crédito</p>
         </div>
       </div>
 
-      {/* Modal cinza */}
-      <div className="bg-[var(--color-cinza-escuro)] p-4 rounded-xl shadow -mt-[12px]">
-        <h3 className="text-[var(--color-preto)] text-base font-bold mb-4">
-          Meus cartões
-        </h3>
+      <div className="flex flex-row w-full gap-10 items-start p-4 rounded-md">
+        {/* Parte visual do cartão */}
+        <div className="w-[260px] h-[147px] rounded-lg bg-[#999999] p-3 flex flex-col justify-between text-[var(--color-branco)] font-sans italic">
+          <div>
+            <p className="text-base font-bold">Byte</p>
+            <p className="text-[12px] not-italic">Platinum</p>
+          </div>
+          <div>
+            <p className="text-[12px] not-italic">Joana Fonseca Gomes</p>
+            <p className="text-lg tracking-wider">*********</p>
+          </div>
+        </div>
 
-        <div className="flex flex-col md:flex-row items-center md:items-start justify-center gap-6">
+        <div className="flex flex-col justify-between">
+          <p className="text-[var(--color-preto)] mb-2">Cartão Digital</p>
 
-          {/* Cartão Físico */}
-          <div className="fflex flex-col items-center w-full md:w-[220px]">
-            <p className="text-[var(--color-preto)] text-center mb-1">Cartão físico</p>
+          <div className="flex flex-col space-y-1 mb-2">
+            <button
+              onClick={() => abrirModal('configurar', 'digital')}
+              className="w-[160px] bg-[var(--color-azul-escuro)] hover:bg-[var(--color-azul-claro)] text-[var(--color-branco)] text-sm py-2 px-3 rounded-md transition-colors duration-200 ease-in-out"
+            >
+              Configurar
+            </button>
 
-            <div className="w-full h-[147px] rounded-lg bg-[var(--color-azul-escuro)] p-3 flex flex-col justify-between text-[var(--color-branco)] font-sans italic">
-              <div>
-                <p className="text-base font-bold">Byte</p>
-                <p className="text-[12px] not-italic">Platinum</p>
-              </div>
-              <div>
-                <p className="text-[12px] not-italic">Joana Fonseca Gomes</p>
-                <p className="text-lg tracking-wider">*********</p>
-              </div>
-            </div>
-
-            <div className="flex flex-col space-y-1 mt-2 items-center">
-              <button
-                onClick={() => abrirModal('configurar', 'fisico')}
-                className="w-[110px] bg-[var(--color-azul-claro)] hover:bg-[var(--color-azul-escuro)] text-[var(--color-branco)] text-sm py-1 px-3 rounded-full"
-              >
-                Configurar
-              </button>
-
-              <button
-                onClick={() => abrirModal('bloquear', 'fisico')}
-                className="w-[160px] text-[var(--color-erro)] border border-[var(--color-vermelho)] text-sm py-1 px-3 rounded-full hover:bg-[#ffe6e6]"
-              >
-                Bloqueio/Desbloqueio
-              </button>
-            </div>
-
-            <p className="text-[var(--color-preto)] text-xs mt-1">Função: Débito/Crédito</p>
+            <button
+              onClick={() => abrirModal('bloquear', 'digital')}
+              className="w-[160px] text-[var(--color-erro)] border border-[var(--color-vermelho)] text-sm py-2 px-3 rounded-md hover:bg-[#e999994d] transition-colors duration-200 ease-in-out"
+            >
+              Bloqueio/Desbloqueio
+            </button>
           </div>
 
-          {/* Cartão Digital */}
-          <div className="flex flex-col items-center w-full md:w-[220px]">
-            <p className="text-[var(--color-preto)] text-center mb-1">Cartão digital</p>
-
-            <div className="w-full h-[147px] rounded-lg bg-[#999999] p-3 flex flex-col justify-between text-[var(--color-branco)] font-sans italic">
-              <div>
-                <p className="text-base font-bold">Byte</p>
-                <p className="text-[12px] not-italic">Platinum</p>
-              </div>
-              <div>
-                <p className="text-[12px] not-italic">Joana Fonseca Gomes</p>
-                <p className="text-lg tracking-wider">*********</p>
-              </div>
-            </div>
-
-            <div className="flex flex-col space-y-1 mt-2 items-center">
-              <button
-                onClick={() => abrirModal('configurar', 'digital')}
-                className="w-[110px] bg-[var(--color-azul-claro)] hover:bg-[var(--color-azul-escuro)] text-[var(--color-branco)] text-sm py-1 px-3 rounded-full"
-              >
-                Configurar
-              </button>
-
-              <button
-                onClick={() => abrirModal('bloquear', 'digital')}
-                className="w-[160px] text-[var(--color-erro)] border border-[var(--color-vermelho)] text-sm py-1 px-3 rounded-full hover:bg-[#ffe6e6]"
-              >
-                Bloqueio/Desbloqueio
-              </button>
-            </div>
-
-            <p className="text-[var(--color-preto)] text-xs mt-1">Função: Débito</p>
-          </div>
+          <p className="text-[var(--color-preto)] text-xs">Função: Débito</p>
         </div>
       </div>
 

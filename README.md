@@ -25,8 +25,4 @@
 git clone https://github.com/FIAP-GRUPO-7/tech-challenge.git
 cd tech-challenge
 npm install
-<<<<<<< HEAD
 npm run dev
-=======
-npm run dev
->>>>>>> main
