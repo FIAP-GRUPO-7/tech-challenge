@@ -5,54 +5,44 @@ import { HiPencil } from "react-icons/hi";
 import { IoTrashOutline } from "react-icons/io5";
 import { RoundedButton } from "@/components/_RoundedButton";
 import { formatToBRL } from "../app/helpers/format";
+import { useTransactionContext } from "@/app/context/TransactionContext";
 
 export function GreetingCard({ children }: { children?: React.ReactNode }) {
   const [name, setName] = useState<string>("Usuário");
   const [date, setDate] = useState<string>("");
   const [show, setShow] = useState<boolean>(false);
-  const [balance, setBalance] = useState<number>(0);
+  const { transactions } = useTransactionContext();
+
+  const balance = transactions.reduce((acc, item) => {
+    const isEntrada = item.type.toLowerCase() === "depósito";
+    const valor = Number(item.value);
+    return acc + (isEntrada ? valor : -valor);
+  }, 0);
 
   useEffect(() => {
-  if (typeof window !== "undefined") {
-    const storedUsers = localStorage.getItem("users");
-    if (storedUsers) {
-      try {
-        const users = JSON.parse(storedUsers);
-        if (Array.isArray(users) && users.length > 0) {
-          setName(users[0].name);
+    if (typeof window !== "undefined") {
+      const storedUsers = localStorage.getItem("users");
+      if (storedUsers) {
+        try {
+          const users = JSON.parse(storedUsers);
+          if (Array.isArray(users) && users.length > 0) {
+            setName(users[0].name);
+          }
+        } catch (error) {
+          console.error("Erro ao parsear usuários:", error);
         }
-      } catch (error) {
-        console.error("Erro ao parsear usuários:", error);
       }
+
+      const today = new Date();
+      const formatted = today.toLocaleDateString("pt-BR", {
+        weekday: "long",
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+      setDate(formatted);
     }
-
-    const today = new Date();
-    const formatted = today.toLocaleDateString("pt-BR", {
-      weekday: "long",
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-    setDate(formatted);
-
-    const data = localStorage.getItem("transactions");
-    if (data) {
-      try {
-        const parsed = JSON.parse(data) as { type: string; value: number }[];
-        const total = parsed.reduce((acc, item) => {
-          const isEntrada = item.type.toLowerCase() === "depósito";
-          const valor = Number(item.value);
-          return acc + (isEntrada ? valor : -valor);
-        }, 0);
-        setBalance(total);
-      } catch (error) {
-        console.error("Erro ao parsear transações:", error);
-        setBalance(0);
-      }
-    }
-  }
-}, []);
-
+  }, []);
 
   return (
     <div className="w-full bg-azul-escuro rounded-md p-6 flex gap-4 flex-col sm:flex-row sm:h-[406px]">
@@ -83,59 +73,30 @@ export function GreetingCard({ children }: { children?: React.ReactNode }) {
   );
 }
 
-export type Extract = {
-  id: string;
-  month: string;
-  type: string;
-  value: number;
-  date: string;
-};
-
 export function ExtractList() {
-  const [extracts, setExtracts] = useState<Extract[]>([]);
+  const { transactions, editTransaction, deleteTransaction } = useTransactionContext();
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  useEffect(() => {
-    const data = localStorage.getItem('transactions');
-    if (data) {
-      const parsed = JSON.parse(data) as Extract[];
-
-      const withMonth = parsed.map((item) => {
-        const [day, month, year] = item.date.split('/');
-        const dateObj = new Date(
-          +`20${year.length === 2 ? year : year}`,
-          +month - 1,
-          +day
-        );
-        return {
-          ...item,
-          month: dateObj.toLocaleDateString('pt-BR', { month: 'long' }),
-        };
-      });
-
-      setExtracts(withMonth);
-    }
-  }, []);
-
-  const handleDelete = (id: string) => {
-    const updated = extracts.filter((item) => item.id !== id);
-    setExtracts(updated);
-    localStorage.setItem('transactions', JSON.stringify(updated));
-    setSelectedId(null);
-  };
-
-  const handleEdit = (item: Extract) => {
-    const newValue = prompt('Novo valor da transação:', item.value.toString());
+  function handleEdit(id: string, currentValue: number) {
+    const newValue = prompt("Novo valor da transação:", currentValue.toString());
     if (newValue) {
-      const updated = extracts.map((e) =>
-        e.id === item.id ? { ...e, value: Number(newValue) } : e
-      );
-      setExtracts(updated);
-      localStorage.setItem('transactions', JSON.stringify(updated));
+      const numeric = Number(newValue);
+      if (!isNaN(numeric)) {
+        editTransaction(id, numeric);
+      } else {
+        alert("Valor inválido.");
+      }
     }
-  };
+  }
 
-  if (extracts.length === 0) {
+  function handleDelete(id: string) {
+    if (confirm("Deseja excluir esta transação?")) {
+      deleteTransaction(id);
+      setSelectedId(null);
+    }
+  }
+
+  if (transactions.length === 0) {
     return (
       <div className="bg-white rounded-md px-6 py-8 xl:w-[282px] text-center">
         <p className="text-lg font-semibold">Nenhuma transação registrada.</p>
@@ -150,20 +111,17 @@ export function ExtractList() {
         <div className="flex gap-2">
           <RoundedButton
             onClick={() => {
-              const item = extracts.find((e) => e.id === selectedId);
-              if (item) handleEdit(item);
-              else alert('Selecione uma transação para editar.');
+              const item = transactions.find((e) => e.id === selectedId);
+              if (item) handleEdit(item.id, item.value);
+              else alert("Selecione uma transação para editar.");
             }}
           >
             <HiPencil color="white" size={25} />
           </RoundedButton>
           <RoundedButton
             onClick={() => {
-              if (!selectedId) {
-                alert('Selecione uma transação para excluir.');
-                return;
-              }
-              handleDelete(selectedId);
+              if (selectedId) handleDelete(selectedId);
+              else alert("Selecione uma transação para excluir.");
             }}
           >
             <IoTrashOutline color="white" size={25} />
@@ -172,34 +130,50 @@ export function ExtractList() {
       </div>
 
       <div className="flex flex-col gap-4">
-        {extracts.map((extract) => (
+        {transactions.map((extract) => {
+          const [day, month, year] = extract.date.split("/");
+          const dateObj = new Date(
+            +`20${year.length === 2 ? year : year}`,
+            +month - 1,
+            +day
+          );
+          const monthName = dateObj.toLocaleDateString("pt-BR", {
+            month: "long",
+          });
+
+          return (
             <div
               key={extract.id}
               onClick={() => setSelectedId(extract.id)}
               className={`cursor-pointer p-2 rounded transition ${
-                selectedId === extract.id ? 'bg-gray-100 border border-azul-claro' : ''
+                selectedId === extract.id
+                  ? "bg-gray-100 border border-azul-claro"
+                  : ""
               } flex justify-between items-center flex-wrap-reverse`}
             >
-            <div
-              className={`flex-1 flex flex-col gap-2 border-b-1 pb-2 ${
-                extract.type.toLowerCase() === 'depósito'
-                  ? 'border-sucesso'
-                  : 'border-erro'
-              }`}
-            >
-              <h4 className="text-label font-semibold text-md">
-                {extract.month}
-              </h4>
-              <p className="text-lg">{extract.type}</p>
-              <b className={`text-lg font-bold ${extract.value < 0 ? 'text-red-600' : ''}`}>
-                 {extract.value < 0
-                   ? `- R$ ${formatToBRL(Math.abs(extract.value)).replace("R$", "").trim()}`
-                   : formatToBRL(extract.value)}
-              </b>
+              <div
+                className={`flex-1 flex flex-col gap-2 border-b-1 pb-2 ${
+                  extract.type.toLowerCase() === "depósito"
+                    ? "border-sucesso"
+                    : "border-erro"
+                }`}
+              >
+                <h4 className="text-label font-semibold text-md">{monthName}</h4>
+                <p className="text-lg">{extract.type}</p>
+                <b
+                  className={`text-lg font-bold ${
+                    extract.value < 0 ? "text-red-600" : ""
+                  }`}
+                >
+                  {extract.value < 0
+                    ? `- R$ ${formatToBRL(Math.abs(extract.value)).replace("R$", "").trim()}`
+                    : formatToBRL(extract.value)}
+                </b>
+              </div>
+              <span className="text-label">{extract.date}</span>
             </div>
-            <span className="text-label">{extract.date}</span>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

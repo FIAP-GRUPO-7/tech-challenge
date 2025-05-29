@@ -1,11 +1,15 @@
 "use client";
+
 import { useState } from "react";
 import { Button } from "@/components/_button";
 import { IoMdArrowDropdown } from "react-icons/io";
+import { useTransactionContext } from "@/app/context/TransactionContext"; // ✅ use o hook correto
 
 export default function TransactionForm() {
   const [type, setType] = useState("");
   const [value, setValue] = useState("");
+
+  const { addTransaction } = useTransactionContext(); // ✅ usa o hook customizado
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -18,17 +22,13 @@ export default function TransactionForm() {
     const transaction = {
       id: crypto.randomUUID(),
       type,
-      value,
+      value: Number(value),
       date: new Date().toLocaleDateString("pt-BR"),
     };
 
-    const existing = JSON.parse(localStorage.getItem("transactions") || "[]");
-    existing.push(transaction);
-    localStorage.setItem("transactions", JSON.stringify(existing));
-
+    addTransaction(transaction); // ✅ adiciona via contexto
     setType("");
     setValue("");
-
   }
 
   return (
