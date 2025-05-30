@@ -14,7 +14,6 @@ interface User {
   email: string;
   terms: boolean;
   password: string;
-  // Adicione mais campos conforme necessário
 }
 
 interface AuthContextType {
@@ -45,7 +44,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const signIn = async (email: string, password: string) => {
     try {
       setLoading(true);
-      console.log(email, password);
       const users: Array<User> = JSON.parse(
         localStorage.getItem("users") || "[]"
       );
@@ -53,7 +51,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         (u) => u.email === email && u.password === password
       );
 
-      console.log(existing);
       if (existing) {
         setUser(existing);
         localStorage.setItem("user", JSON.stringify(existing));
