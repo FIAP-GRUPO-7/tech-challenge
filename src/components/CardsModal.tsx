@@ -23,14 +23,13 @@ const CardsModal = () => {
   };
 
   return (
-    <div className="flex flex-col space-y-6 w-full bg-cinza-escuro rounded-md max-w-[700px] mx-auto">
-      <h2 className="text-xl font-semibold text-[var(--color-preto)] px-4 pt-4">
+    <section className="bg-cinza-escuro p-6 rounded-md w-full">
+      <h2 className="text-xl font-semibold text-[var(--color-preto)] mb-4">
         Meus Cartões
       </h2>
 
-      {/* Modal cinza */}
-      <div className="flex flex-row w-full gap-10 items-start  p-4 rounded-md">
-        {/* Parte visual do cartão */}
+      {/* Cartão Físico */}
+      <div className="flex flex-col md:flex-row w-full gap-10 items-start p-6 rounded-md mb-4">
         <div className="w-[260px] h-[147px] rounded-lg bg-[var(--color-azul-escuro)] p-3 flex flex-col justify-between text-[var(--color-branco)] font-sans italic">
           <div>
             <p className="text-base font-bold">Byte</p>
@@ -65,8 +64,8 @@ const CardsModal = () => {
         </div>
       </div>
 
-      <div className="flex flex-row w-full gap-10 items-start p-4 rounded-md">
-        {/* Parte visual do cartão */}
+      {/* Cartão Digital */}
+      <div className="flex flex-col md:flex-row w-full gap-10 items-start p-6 rounded-md">
         <div className="w-[260px] h-[147px] rounded-lg bg-[#999999] p-3 flex flex-col justify-between text-[var(--color-branco)] font-sans italic">
           <div>
             <p className="text-base font-bold">Byte</p>
@@ -101,13 +100,13 @@ const CardsModal = () => {
         </div>
       </div>
 
-      {/* Modal Cartões (backdrop-blur tela inteira) */}
+      {/* Modal Cartões */}
       {modalAberto && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
           <ModalCartoes tipo={tipoModal} cartao={cartaoSelecionado} onClose={fecharModal} />
         </div>
       )}
-    </div>
+    </section>
   );
 };
 
