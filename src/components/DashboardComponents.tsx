@@ -5,17 +5,34 @@ import { HiPencil } from "react-icons/hi";
 import { IoTrashOutline } from "react-icons/io5";
 import { RoundedButton } from "@/components/_RoundedButton";
 import { formatToBRL } from "../app/helpers/format";
-import { useAuth } from "@/context/auth";
-import { TransactionType, useTransaction } from "@/context/transactions";
+import { useTransactionContext } from "@/app/context/TransactionContext";
 
 export function GreetingCard({ children }: { children?: React.ReactNode }) {
+  const [name, setName] = useState<string>("Usuário");
   const [date, setDate] = useState<string>("");
   const [show, setShow] = useState<boolean>(false);
-  const { user } = useAuth();
-  const { balance } = useTransaction();
+  const { transactions } = useTransactionContext();
+
+  const balance = transactions.reduce((acc, item) => {
+    const isEntrada = item.type.toLowerCase() === "depósito";
+    const valor = Number(item.value);
+    return acc + (isEntrada ? valor : -valor);
+  }, 0);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
+      const storedUsers = localStorage.getItem("users");
+      if (storedUsers) {
+        try {
+          const users = JSON.parse(storedUsers);
+          if (Array.isArray(users) && users.length > 0) {
+            setName(users[0].name);
+          }
+        } catch (error) {
+          console.error("Erro ao parsear usuários:", error);
+        }
+      }
+
       const today = new Date();
       const formatted = today.toLocaleDateString("pt-BR", {
         weekday: "long",
@@ -30,9 +47,7 @@ export function GreetingCard({ children }: { children?: React.ReactNode }) {
   return (
     <div className="w-full bg-azul-escuro rounded-md p-6 flex gap-4 flex-col sm:flex-row sm:h-[406px]">
       <div className="flex flex-col gap-6 flex-1">
-        <h2 className="text-2xl text-white">
-          Olá, {user?.name || "Usuário"}! :)
-        </h2>
+        <h2 className="text-2xl text-white">Olá, {name}! :)</h2>
         <p className="text-white">{date}</p>
       </div>
       <div className="flex-1 flex sm:justify-center sm:relative">
@@ -58,47 +73,34 @@ export function GreetingCard({ children }: { children?: React.ReactNode }) {
   );
 }
 
-export type Extract = {
-  id: string;
-  month: string;
-  type: TransactionType;
-  value: number;
-  date: string;
-};
-
 export function ExtractList() {
+  const { transactions, editTransaction, deleteTransaction } =
+    useTransactionContext();
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const { extracts, deleteTransaction, editTransaction } = useTransaction();
 
-  const extractsWithMonth = extracts.map((item) => {
-    const [day, month, year] = item.date.split("/");
-    const dateObj = new Date(
-      +`20${year.length === 2 ? year : year}`,
-      +month - 1,
-      +day
+  function handleEdit(id: string, currentValue: number) {
+    const newValue = prompt(
+      "Novo valor da transação:",
+      currentValue.toString()
     );
-    return {
-      ...item,
-      month: dateObj.toLocaleDateString("pt-BR", { month: "long" }),
-    };
-  });
-
-  const handleDelete = (id: string) => {
-    deleteTransaction(id);
-    setSelectedId(null);
-  };
-
-  const handleEdit = (item: Extract) => {
-    const newValue = prompt("Novo valor da transação:", item.value.toString());
     if (newValue) {
-      editTransaction({
-        ...item,
-        value: newValue,
-      });
+      const numeric = Number(newValue);
+      if (!isNaN(numeric)) {
+        editTransaction(id, numeric);
+      } else {
+        alert("Valor inválido.");
+      }
     }
-  };
+  }
 
-  if (extractsWithMonth.length === 0) {
+  function handleDelete(id: string) {
+    if (confirm("Deseja excluir esta transação?")) {
+      deleteTransaction(id);
+      setSelectedId(null);
+    }
+  }
+
+  if (transactions.length === 0) {
     return (
       <div className="bg-white rounded-md px-6 py-8 xl:w-[282px] text-center">
         <p className="text-lg font-semibold">Nenhuma transação registrada.</p>
@@ -113,12 +115,8 @@ export function ExtractList() {
         <div className="flex gap-2">
           <RoundedButton
             onClick={() => {
-              const item = extractsWithMonth.find((e) => e.id === selectedId);
-              if (item)
-                handleEdit({
-                  ...item,
-                  value: Number(item.value),
-                });
+              const item = transactions.find((e) => e.id === selectedId);
+              if (item) handleEdit(item.id, item.value);
               else alert("Selecione uma transação para editar.");
             }}
           >
@@ -126,11 +124,8 @@ export function ExtractList() {
           </RoundedButton>
           <RoundedButton
             onClick={() => {
-              if (!selectedId) {
-                alert("Selecione uma transação para excluir.");
-                return;
-              }
-              handleDelete(selectedId);
+              if (selectedId) handleDelete(selectedId);
+              else alert("Selecione uma transação para excluir.");
             }}
           >
             <IoTrashOutline color="white" size={25} />
@@ -139,8 +134,17 @@ export function ExtractList() {
       </div>
 
       <div className="flex flex-col gap-4">
-        {extractsWithMonth.map((extract) => {
-          const value = Number(extract.value);
+        {transactions.map((extract) => {
+          const [day, month, year] = extract.date.split("/");
+          const dateObj = new Date(
+            +`20${year.length === 2 ? year : year}`,
+            +month - 1,
+            +day
+          );
+          const monthName = dateObj.toLocaleDateString("pt-BR", {
+            month: "long",
+          });
+
           return (
             <div
               key={extract.id}
@@ -159,19 +163,19 @@ export function ExtractList() {
                 }`}
               >
                 <h4 className="text-label font-semibold text-md">
-                  {extract.month}
+                  {monthName}
                 </h4>
                 <p className="text-lg">{extract.type}</p>
                 <b
                   className={`text-lg font-bold ${
-                    extract.type.toLowerCase() === "depósito"
-                      ? ""
-                      : "text-red-600"
+                    extract.value < 0 ? "text-red-600" : ""
                   }`}
                 >
-                  {value < 0
-                    ? `- R$ ${formatToBRL(Math.abs(value)).trim()}`
-                    : formatToBRL(value)}
+                  {extract.value < 0
+                    ? `- R$ ${formatToBRL(Math.abs(extract.value))
+                        .replace("R$", "")
+                        .trim()}`
+                    : formatToBRL(extract.value)}
                 </b>
               </div>
               <span className="text-label">{extract.date}</span>

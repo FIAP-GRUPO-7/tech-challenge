@@ -15,15 +15,9 @@ type TransactionContextType = {
   deleteTransaction: (id: string) => void;
 };
 
-const TransactionContext = createContext<TransactionContextType | undefined>(
-  undefined
-);
+const TransactionContext = createContext<TransactionContextType | undefined>(undefined);
 
-export function TransactionProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function TransactionProvider({ children }: { children: React.ReactNode }) {
   const [transactions, setTransactions] = useState<Extract[]>([]);
 
   useEffect(() => {
@@ -53,12 +47,7 @@ export function TransactionProvider({
 
   return (
     <TransactionContext.Provider
-      value={{
-        transactions,
-        addTransaction,
-        editTransaction,
-        deleteTransaction,
-      }}
+      value={{ transactions, addTransaction, editTransaction, deleteTransaction }}
     >
       {children}
     </TransactionContext.Provider>
@@ -68,9 +57,7 @@ export function TransactionProvider({
 export function useTransactionContext() {
   const context = useContext(TransactionContext);
   if (!context) {
-    throw new Error(
-      "useTransactionContext deve ser usado dentro de TransactionProvider"
-    );
+    throw new Error("useTransactionContext deve ser usado dentro de TransactionProvider");
   }
   return context;
 }
