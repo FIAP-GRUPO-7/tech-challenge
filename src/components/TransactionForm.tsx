@@ -9,7 +9,6 @@ export default function TransactionForm() {
   const [value, setValue] = useState("");
   const { addTransaction, transactions } = useTransactionContext();
 
-  // Cálculo do saldo atual
   const saldo = transactions.reduce((acc, item) => {
     return item.type === "Depósito" ? acc + item.value : acc - item.value;
   }, 0);
