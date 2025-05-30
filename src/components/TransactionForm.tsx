@@ -2,14 +2,18 @@
 import { useState } from "react";
 import { Button } from "@/components/_button";
 import { IoMdArrowDropdown } from "react-icons/io";
-import { useTransactionContext } from "@/app/context/TransactionContext"; 
+import { useTransactionContext } from "@/app/context/TransactionContext";
 
 export default function TransactionForm() {
   const [type, setType] = useState("");
   const [value, setValue] = useState("");
+  const { addTransaction, transactions } = useTransactionContext();
 
-  const { addTransaction } = useTransactionContext(); 
-  
+  // Cálculo do saldo atual
+  const saldo = transactions.reduce((acc, item) => {
+    return item.type === "Depósito" ? acc + item.value : acc - item.value;
+  }, 0);
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
@@ -18,14 +22,28 @@ export default function TransactionForm() {
       return;
     }
 
+    const valorNumerico = parseFloat(value.replace(",", "."));
+
+    if (isNaN(valorNumerico) || valorNumerico <= 0) {
+      alert("Digite um valor válido.");
+      return;
+    }
+
+    const isSaida = type === "Saque" || type === "Transferência";
+
+    if (isSaida && valorNumerico > saldo) {
+      alert("Saldo insuficiente para realizar a transação.");
+      return;
+    }
+
     const transaction = {
       id: crypto.randomUUID(),
       type,
-      value: Number(value),
+      value: valorNumerico,
       date: new Date().toLocaleDateString("pt-BR"),
     };
 
-    addTransaction(transaction); 
+    addTransaction(transaction);
     setType("");
     setValue("");
   }
