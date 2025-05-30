@@ -1,16 +1,16 @@
+"use client";
+
 import { useState, ChangeEvent, FormEvent } from "react";
 import Cadastro from "@/shared/assets/Cadastro.svg";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/auth";
 
 interface LoginModalProps {
   onClose: () => void;
 }
 
 export default function LoginModal({ onClose }: LoginModalProps) {
-  const router = useRouter();
-
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -21,6 +21,7 @@ export default function LoginModal({ onClose }: LoginModalProps) {
     password: "",
   });
 
+  const { signIn, error } = useAuth();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setForm((prev) => ({
@@ -42,24 +43,18 @@ export default function LoginModal({ onClose }: LoginModalProps) {
     return Object.values(newErrors).every((err) => !err);
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validate()) return;
 
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    const user = users.find(
-      (u: any) => u.email === form.email && u.password === form.password
-    );
-
-    if (!user) {
-      setErrors({
-        email: "Email ou senha inválidos.",
-        password: "Email ou senha inválidos.",
-      });
-      return;
+    try {
+      await signIn(form.email, form.password);
+      if (!error) {
+        onClose(); // só fecha se login ok
+      }
+    } catch (err) {
+      console.error(err);
     }
-    onClose();
-    router.push("/home");
   };
 
   return (
@@ -126,11 +121,12 @@ export default function LoginModal({ onClose }: LoginModalProps) {
           <Link href="" className="text-xs text-sucesso">
             Esqueci a senha?
           </Link>
+          {error && <p className="text-erro text-xs mt-1">{error}</p>}
 
           <div className="flex justify-center mt-8">
             <button
               type="submit"
-              className="px-4 py-2 rounded font-bold text-branco bg-azul-claro"
+              className="px-4 py-2 rounded font-bold text-branco bg-azul-claro cursor-pointer"
             >
               Acessar
             </button>

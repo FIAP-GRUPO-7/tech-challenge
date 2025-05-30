@@ -2,10 +2,12 @@
 import { useState } from "react";
 import { Button } from "@/components/_button";
 import { IoMdArrowDropdown } from "react-icons/io";
+import { TransactionType, useTransaction } from "@/context/transactions";
 
 export default function TransactionForm() {
   const [type, setType] = useState("");
   const [value, setValue] = useState("");
+  const { addTransaction } = useTransaction();
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -17,22 +19,18 @@ export default function TransactionForm() {
 
     const transaction = {
       id: crypto.randomUUID(),
-      type,
+      type: type as TransactionType,
       value,
       date: new Date().toLocaleDateString("pt-BR"),
     };
 
-    const existing = JSON.parse(localStorage.getItem("transactions") || "[]");
-    existing.push(transaction);
-    localStorage.setItem("transactions", JSON.stringify(existing));
-
+    addTransaction(transaction);
     setType("");
     setValue("");
-
   }
 
   return (
-    <div className="flex-1 bg-cinza-escuro rounded-md p-6 flex flex-col gap-8">
+    <div className="flex-1 bg-cinza-escuro rounded-md p-6 flex flex-col gap-8 max-h-[400px]">
       <h2 className="text-2xl font-bold">Nova Transação</h2>
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-8">
@@ -58,7 +56,7 @@ export default function TransactionForm() {
             </label>
             <input
               id="value"
-              type="text"
+              type="number"
               value={value}
               onChange={(e) => setValue(e.target.value)}
               className="bg-white w-full max-w-[250px] h-[48px] rounded-md border-2 border-azul-claro px-4 text-center text-text-field"
@@ -66,7 +64,11 @@ export default function TransactionForm() {
             />
           </div>
 
-          <Button className="w-full max-w-[250px] h-[48px]" hasIcon type="submit">
+          <Button
+            className="w-full max-w-[250px] h-[48px]"
+            hasIcon
+            type="submit"
+          >
             Concluir transação
           </Button>
         </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuth } from "@/context/auth";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -22,6 +23,7 @@ export const DropdownMenu = ({ children }: DropdownMenuProps) => {
   const [show, setShow] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const { signOut } = useAuth();
 
   // Fecha o menu ao clicar fora
   useEffect(() => {
@@ -62,7 +64,7 @@ export const DropdownMenu = ({ children }: DropdownMenuProps) => {
       action: {
         type: ActionTypeEnum.ACTION,
         value: () => {
-          console.log("Saiu!!");
+          signOut();
         },
       },
     },
