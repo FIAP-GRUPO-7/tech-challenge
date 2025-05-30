@@ -1,16 +1,15 @@
 "use client";
-
 import { useState } from "react";
 import { Button } from "@/components/_button";
 import { IoMdArrowDropdown } from "react-icons/io";
-import { useTransactionContext } from "@/app/context/TransactionContext"; // ✅ use o hook correto
+import { useTransactionContext } from "@/app/context/TransactionContext"; 
 
 export default function TransactionForm() {
   const [type, setType] = useState("");
   const [value, setValue] = useState("");
 
-  const { addTransaction } = useTransactionContext(); // ✅ usa o hook customizado
-
+  const { addTransaction } = useTransactionContext(); 
+  
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
@@ -26,7 +25,7 @@ export default function TransactionForm() {
       date: new Date().toLocaleDateString("pt-BR"),
     };
 
-    addTransaction(transaction); // ✅ adiciona via contexto
+    addTransaction(transaction); 
     setType("");
     setValue("");
   }
