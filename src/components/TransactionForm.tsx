@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/components/_button";
 import { IoMdArrowDropdown } from "react-icons/io";
-import { useTransactionContext } from "@/app/context/TransactionContext";
+import { useTransactionContext } from "@/context/TransactionContext";
 
 export default function TransactionForm() {
   const [type, setType] = useState("");
@@ -82,7 +82,11 @@ export default function TransactionForm() {
             />
           </div>
 
-          <Button className="w-full max-w-[250px] h-[48px]" hasIcon type="submit">
+          <Button
+            className="w-full max-w-[250px] h-[48px]"
+            hasIcon
+            type="submit"
+          >
             Concluir transação
           </Button>
         </div>

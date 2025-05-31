@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "@/context/auth";
+import { TransactionProvider } from "@/context/TransactionContext";
 
 const roboto = Roboto({
-  subsets: ['latin'],
-  weight: ['400', '300', '500', '700'], 
-  variable: '--font-roboto',
-})
+  subsets: ["latin"],
+  weight: ["400", "300", "500", "700"],
+  variable: "--font-roboto",
+});
 
 export const metadata: Metadata = {
   title: "Bytebank",
@@ -21,10 +23,10 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon64px.ico" />
       </head>
-      <body
-        className={`${roboto.variable} ${roboto.variable} antialiased`}
-      >
-        {children}
+      <body className={`${roboto.variable} ${roboto.variable} antialiased`}>
+        <AuthProvider>
+          <TransactionProvider>{children}</TransactionProvider>
+        </AuthProvider>
       </body>
     </html>
   );

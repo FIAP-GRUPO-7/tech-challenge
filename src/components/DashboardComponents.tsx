@@ -5,7 +5,7 @@ import { HiPencil } from "react-icons/hi";
 import { IoTrashOutline } from "react-icons/io5";
 import { RoundedButton } from "@/components/_RoundedButton";
 import { formatToBRL } from "../app/helpers/format";
-import { useTransactionContext } from "@/app/context/TransactionContext";
+import { useTransactionContext } from "@/context/TransactionContext";
 
 export function GreetingCard({ children }: { children?: React.ReactNode }) {
   const [name, setName] = useState<string>("Usuário");
