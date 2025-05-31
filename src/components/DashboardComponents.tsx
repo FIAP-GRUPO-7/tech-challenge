@@ -5,7 +5,7 @@ import { HiPencil } from "react-icons/hi";
 import { IoTrashOutline } from "react-icons/io5";
 import { RoundedButton } from "@/components/_RoundedButton";
 import { formatToBRL } from "../app/helpers/format";
-import { useTransactionContext } from "@/app/context/TransactionContext";
+import { useTransactionContext } from "@/context/TransactionContext";
 
 export function GreetingCard({ children }: { children?: React.ReactNode }) {
   const [name, setName] = useState<string>("Usuário");
@@ -74,15 +74,11 @@ export function GreetingCard({ children }: { children?: React.ReactNode }) {
 }
 
 export function ExtractList() {
-  const { transactions, editTransaction, deleteTransaction } =
-    useTransactionContext();
+  const { transactions, editTransaction, deleteTransaction } = useTransactionContext();
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   function handleEdit(id: string, currentValue: number) {
-    const newValue = prompt(
-      "Novo valor da transação:",
-      currentValue.toString()
-    );
+    const newValue = prompt("Novo valor da transação:", currentValue.toString());
     if (newValue) {
       const numeric = Number(newValue);
       if (!isNaN(numeric)) {
@@ -162,9 +158,7 @@ export function ExtractList() {
                     : "border-erro"
                 }`}
               >
-                <h4 className="text-label font-semibold text-md">
-                  {monthName}
-                </h4>
+                <h4 className="text-label font-semibold text-md">{monthName}</h4>
                 <p className="text-lg">{extract.type}</p>
                 <b
                   className={`text-lg font-bold ${
@@ -172,9 +166,7 @@ export function ExtractList() {
                   }`}
                 >
                   {extract.value < 0
-                    ? `- R$ ${formatToBRL(Math.abs(extract.value))
-                        .replace("R$", "")
-                        .trim()}`
+                    ? `- R$ ${formatToBRL(Math.abs(extract.value)).replace("R$", "").trim()}`
                     : formatToBRL(extract.value)}
                 </b>
               </div>

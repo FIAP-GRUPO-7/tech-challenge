@@ -5,7 +5,8 @@ import { HamburgerSidebar, Sidebar } from "@/components/_sidebar";
 import { useSidebar } from "@/hooks/sidebar";
 import Image from "next/image";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { TransactionProvider } from "@/app/context/TransactionContext";
+import { AuthProvider } from "@/context/auth";
+import { TransactionProvider } from "@/context/TransactionContext";
 
 export default function DashboardLayout({
   children,
@@ -15,6 +16,7 @@ export default function DashboardLayout({
   const { show, toggleSidebar, onClose } = useSidebar();
 
   return (
+  <AuthProvider>
     <TransactionProvider>
       <div className="min-h-screen flex flex-col bg-fundo-principal">
         <header className="relative bg-azul-escuro text-white h-[96px] flex items-center justify-between gap-4 px-16 md:justify-end lg:px-48 xl:64">
@@ -41,5 +43,6 @@ export default function DashboardLayout({
         </main>
       </div>
     </TransactionProvider>
+  </AuthProvider>
   );
 }
