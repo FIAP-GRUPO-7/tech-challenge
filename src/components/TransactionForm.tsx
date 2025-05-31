@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/components/_button";
 import { IoMdArrowDropdown } from "react-icons/io";
-import { useTransactionContext } from "@/app/context/TransactionContext";
+import { useTransactionContext } from "@/context/TransactionContext";
 
 export default function TransactionForm() {
   const [type, setType] = useState("");

@@ -34,9 +34,7 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User | null>(
-    JSON.parse(localStorage.getItem("user") as string) || null
-  );
+  const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -60,7 +58,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         throw new Error("Usuário não encontrado!");
       }
     } catch (err) {
-      throw new Error("Usuário não encontrado!");
+      setError("Usuário não encontrado!");
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -77,10 +76,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   useEffect(() => {
-    const existing: User = JSON.parse(localStorage.getItem("user") as string);
-
-    if (existing) {
-      setUser(existing);
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const existing: User = JSON.parse(storedUser);
+        setUser(existing);
+      } catch {
+        signOut();
+      }
     } else {
       signOut();
     }
