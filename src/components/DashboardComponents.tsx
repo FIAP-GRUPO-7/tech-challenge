@@ -26,7 +26,7 @@ export function GreetingCard({ children }: { children?: React.ReactNode }) {
         try {
           const users = JSON.parse(storedUsers);
           if (Array.isArray(users) && users.length > 0) {
-            setName(users[0].name);
+            setName(users[0].name.split(" ")[0]);
           }
         } catch (error) {
           console.error("Erro ao parsear usuários:", error);
