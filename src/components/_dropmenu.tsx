@@ -1,11 +1,12 @@
 "use client";
 
-import { useAuth } from "@/context/auth";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
+import { useDispatch } from "react-redux";
+import { logout } from "@/features/auth";
 
 interface DropdownMenuProps {
   children: React.ReactNode;
@@ -23,7 +24,7 @@ export const DropdownMenu = ({ children }: DropdownMenuProps) => {
   const [show, setShow] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
-  const { signOut } = useAuth();
+  const dispatch = useDispatch();
 
   // Fecha o menu ao clicar fora
   useEffect(() => {
@@ -64,7 +65,7 @@ export const DropdownMenu = ({ children }: DropdownMenuProps) => {
       action: {
         type: ActionTypeEnum.ACTION,
         value: () => {
-          signOut();
+          dispatch(logout());
         },
       },
     },

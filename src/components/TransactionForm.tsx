@@ -2,16 +2,19 @@
 import { useState } from "react";
 import { Button } from "@/components/_button";
 import { IoMdArrowDropdown } from "react-icons/io";
-import { useTransactionContext } from "@/context/TransactionContext";
+import { useDispatch, useSelector } from "react-redux";
+import { AppState } from "@/store"; // ajuste o caminho conforme sua estrutura
+import { selectBalance, addTransaction } from "@/features/transactions";
 
 export default function TransactionForm() {
   const [type, setType] = useState("");
   const [value, setValue] = useState("");
-  const { addTransaction, transactions } = useTransactionContext();
+  const transactionTypes = useSelector(
+    (state: AppState) => state.transactionsTypes.types
+  );
+  const dispatch = useDispatch();
 
-  const saldo = transactions.reduce((acc, item) => {
-    return item.type === "Depósito" ? acc + item.value : acc - item.value;
-  }, 0);
+  const balance = useSelector(selectBalance);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -30,7 +33,7 @@ export default function TransactionForm() {
 
     const isSaida = type === "Saque" || type === "Transferência";
 
-    if (isSaida && valorNumerico > saldo) {
+    if (isSaida && valorNumerico > balance) {
       alert("Saldo insuficiente para realizar a transação.");
       return;
     }
@@ -42,7 +45,7 @@ export default function TransactionForm() {
       date: new Date().toLocaleDateString("pt-BR"),
     };
 
-    addTransaction(transaction);
+    dispatch(addTransaction(transaction));
     setType("");
     setValue("");
   }
@@ -59,9 +62,11 @@ export default function TransactionForm() {
               className="appearance-none bg-white w-full h-[48px] rounded-md border-2 border-azul-claro px-4 text-text-field"
             >
               <option value="">Selecione o tipo de transação</option>
-              <option>Depósito</option>
-              <option>Saque</option>
-              <option>Transferência</option>
+              {transactionTypes.map((transactionType) => (
+                <option key={transactionType} value={transactionType}>
+                  {transactionType}
+                </option>
+              ))}
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
               <IoMdArrowDropdown size={20} className="fill-azul-escuro" />

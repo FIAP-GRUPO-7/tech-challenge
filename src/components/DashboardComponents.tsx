@@ -5,19 +5,19 @@ import { HiPencil } from "react-icons/hi";
 import { IoTrashOutline } from "react-icons/io5";
 import { RoundedButton } from "@/components/_RoundedButton";
 import { formatToBRL } from "../app/helpers/format";
-import { useTransactionContext } from "@/context/TransactionContext";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  editTransaction,
+  deleteTransaction,
+  selectBalance,
+  selectTransactions,
+} from "@/features/transactions";
 
 export function GreetingCard({ children }: { children?: React.ReactNode }) {
   const [name, setName] = useState<string>("Usuário");
   const [date, setDate] = useState<string>("");
   const [show, setShow] = useState<boolean>(false);
-  const { transactions } = useTransactionContext();
-
-  const balance = transactions.reduce((acc, item) => {
-    const isEntrada = item.type.toLowerCase() === "depósito";
-    const valor = Number(item.value);
-    return acc + (isEntrada ? valor : -valor);
-  }, 0);
+  const balance = useSelector(selectBalance);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -74,15 +74,19 @@ export function GreetingCard({ children }: { children?: React.ReactNode }) {
 }
 
 export function ExtractList() {
-  const { transactions, editTransaction, deleteTransaction } = useTransactionContext();
+  const transactions = useSelector(selectTransactions);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const dispatch = useDispatch();
 
   function handleEdit(id: string, currentValue: number) {
-    const newValue = prompt("Novo valor da transação:", currentValue.toString());
+    const newValue = prompt(
+      "Novo valor da transação:",
+      currentValue.toString()
+    );
     if (newValue) {
       const numeric = Number(newValue);
       if (!isNaN(numeric)) {
-        editTransaction(id, numeric);
+        dispatch(editTransaction({ id, value: numeric }));
       } else {
         alert("Valor inválido.");
       }
@@ -91,7 +95,7 @@ export function ExtractList() {
 
   function handleDelete(id: string) {
     if (confirm("Deseja excluir esta transação?")) {
-      deleteTransaction(id);
+      dispatch(deleteTransaction(id));
       setSelectedId(null);
     }
   }
@@ -158,7 +162,9 @@ export function ExtractList() {
                     : "border-erro"
                 }`}
               >
-                <h4 className="text-label font-semibold text-md">{monthName}</h4>
+                <h4 className="text-label font-semibold text-md">
+                  {monthName}
+                </h4>
                 <p className="text-lg">{extract.type}</p>
                 <b
                   className={`text-lg font-bold ${
@@ -166,7 +172,9 @@ export function ExtractList() {
                   }`}
                 >
                   {extract.value < 0
-                    ? `- R$ ${formatToBRL(Math.abs(extract.value)).replace("R$", "").trim()}`
+                    ? `- R$ ${formatToBRL(Math.abs(extract.value))
+                        .replace("R$", "")
+                        .trim()}`
                     : formatToBRL(extract.value)}
                 </b>
               </div>

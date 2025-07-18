@@ -1,13 +1,14 @@
+"use client";
 import { useState, ChangeEvent, FormEvent } from "react";
 import Login from "@/shared/assets/Login.svg";
 import Image from "next/image";
+import { User } from "@/features/auth";
 
 interface RegisterModalProps {
   onClose: () => void;
 }
 
 export default function RegisterModal({ onClose }: RegisterModalProps) {
-
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -55,7 +56,7 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
 
     const users = JSON.parse(localStorage.getItem("users") || "[]");
 
-    const exists = users.some((u: any) => u.email === form.email);
+    const exists = users.some((u: User) => u.email === form.email);
     if (exists) {
       setErrors((prev) => ({
         ...prev,
