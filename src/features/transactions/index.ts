@@ -23,10 +23,11 @@ const transactionsSlice = createSlice({
             state.push(newTransaction);
         },
         editTransaction: (state, action) => {
-            const { id, newValue } = action.payload;
+            const { id, value } = action.payload;
+
             const transaction = state.find((item) => item.id === id);
             if (transaction) {
-                transaction.value = newValue;
+                transaction.value = value;
             }
         },
         deleteTransaction: (state, action) => {

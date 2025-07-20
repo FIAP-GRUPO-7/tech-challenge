@@ -35,6 +35,7 @@ export const login = createAsyncThunk<
     if (!usersJSON) return rejectWithValue("Nenhum usuário registrado.");
 
     const users = JSON.parse(usersJSON) as User[];
+
     const found = users.find(
       (user) => user.email === email && user.password === password
     );
@@ -43,7 +44,6 @@ export const login = createAsyncThunk<
       return rejectWithValue("E-mail ou senha inválidos.");
     }
 
-    localStorage.setItem("user", JSON.stringify(found));
     return found;
   } catch {
     return rejectWithValue("Erro ao processar login.");
@@ -56,37 +56,67 @@ const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       state.user = null;
-      state.error = "";
+      state.error = null;
       state.loading = false;
-      localStorage.removeItem("user")
-    },
 
-    loadFromLocalStorage: (state) => {
       if (typeof window !== "undefined") {
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) {
-          try {
-            const user = JSON.parse(storedUser);
-            state.user = user;
-          } catch {
-            localStorage.removeItem("user");
-            state.user = null;
-          }
-        } else {
-          state.user = null;
-        }
+        localStorage.removeItem("user");
       }
     },
+    register: (state, action) => {
+      const users = JSON.parse(localStorage.getItem("users") || "[]");
+
+      const exists = users.some((u: User) => u.email === action.payload.email);
+
+      if(exists) {
+        state.error = "Já existe um usuário com esse E-mail."
+      } else {
+        users.push({
+          ...action.payload
+        })
+
+        localStorage.setItem("users", JSON.stringify(users))
+      }
+    },
+    updateUser: (state, action) => {
+      const updatedUser = { ...state.user, ...action.payload } as User;
+      state.user = updatedUser;
+      state.error = null;
+
+      if (typeof window !== "undefined") {
+        // Atualiza usuário atual
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+
+        // Atualiza também no array de usuários registrados
+        const usersJSON = localStorage.getItem("users");
+        if (usersJSON) {
+          const users = JSON.parse(usersJSON) as User[];
+
+          const updatedUsers = users.map((u) =>
+            u.id === updatedUser.id ? updatedUser : u
+          );
+
+          localStorage.setItem("users", JSON.stringify(updatedUsers));
+        }
+      }
+
+      alert("Dados alterados com sucesso!")
+    }
   },
-    extraReducers: (builder) => {
+  extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
+        state.error = null;
         state.loading = false;
         state.user = action.payload;
+
+        if (typeof window !== "undefined") {
+          localStorage.setItem("user", JSON.stringify(action.payload));
+        }
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -95,7 +125,10 @@ const authSlice = createSlice({
   },
 });
 
+export const { logout, updateUser, register } = authSlice.actions;
+
 export const selectUser = (state: { auth: AuthState }) => state.auth.user;
-export const { logout, loadFromLocalStorage } = authSlice.actions;
+export const selectIsAuthenticad = (state: { auth: AuthState }) => !!state.auth.user;
+export const selectLoading = (state: { auth: AuthState }) => state.auth.loading;
 
 export default authSlice.reducer;
