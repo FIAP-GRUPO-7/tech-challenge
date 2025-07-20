@@ -4,7 +4,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { HiPencil } from "react-icons/hi";
 import { IoTrashOutline } from "react-icons/io5";
 import { RoundedButton } from "@/components/_RoundedButton";
-import { formatToBRL } from "../app/helpers/format";
+import { formatToBRL } from "@/helpers/format";
 import { useDispatch, useSelector } from "react-redux";
 import {
   editTransaction,
@@ -12,27 +12,22 @@ import {
   selectBalance,
   selectTransactions,
 } from "@/features/transactions";
+import { selectUser } from "@/features/auth";
 
-export function GreetingCard({ children }: { children?: React.ReactNode }) {
-  const [name, setName] = useState<string>("Usuário");
+export function GreetingCard({
+  children,
+  show,
+}: {
+  children?: React.ReactNode;
+  show: boolean;
+}) {
   const [date, setDate] = useState<string>("");
-  const [show, setShow] = useState<boolean>(false);
+  const [visibled, setVisibled] = useState<boolean>(false);
   const balance = useSelector(selectBalance);
+  const user = useSelector(selectUser);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const storedUsers = localStorage.getItem("users");
-      if (storedUsers) {
-        try {
-          const users = JSON.parse(storedUsers);
-          if (Array.isArray(users) && users.length > 0) {
-            setName(users[0].name.split(" ")[0]);
-          }
-        } catch (error) {
-          console.error("Erro ao parsear usuários:", error);
-        }
-      }
-
       const today = new Date();
       const formatted = today.toLocaleDateString("pt-BR", {
         weekday: "long",
@@ -44,36 +39,48 @@ export function GreetingCard({ children }: { children?: React.ReactNode }) {
     }
   }, []);
 
+  if (!show) {
+    return null;
+  }
+
   return (
     <div className="w-full bg-azul-escuro rounded-md p-6 flex gap-4 flex-col sm:flex-row sm:h-[406px]">
-      <div className="flex flex-col gap-6 flex-1">
-        <h2 className="text-2xl text-white">Olá, {name}! :)</h2>
-        <p className="text-white">{date}</p>
-      </div>
-      <div className="flex-1 flex sm:justify-center sm:relative">
-        <div className="w-[180px] sm:absolute sm:top-[75px]">
-          <div className="border-white border-b-2 py-4">
-            <h3 className="text-xl text-white flex items-center gap-6">
-              <span>Saldo</span>
-              <button onClick={() => setShow((prev) => !prev)}>
-                {show ? <FaEyeSlash /> : <FaEye />}
-              </button>
-            </h3>
-          </div>
-          <div className="border-white py-4 flex flex-col gap-2">
-            <span className="text-lg text-white">Conta Corrente</span>
-            <h2 className="text-3xl text-white">
-              {show ? formatToBRL(balance) : "*******"}
-            </h2>
+      {user && (
+        <div className="flex flex-col gap-6 flex-1">
+          <h2 className="text-2xl text-white">Olá, {user?.name || ""}! :)</h2>
+          <p className="text-white">{date}</p>
+        </div>
+      )}
+      {user && (
+        <div className="flex-1 flex sm:justify-center sm:relative">
+          <div className="w-[180px] sm:absolute sm:top-[75px]">
+            <div className="border-white border-b-2 py-4">
+              <h3 className="text-xl text-white flex items-center gap-6">
+                <span>Saldo</span>
+                <button onClick={() => setVisibled((prev) => !prev)}>
+                  {visibled ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </h3>
+            </div>
+            <div className="border-white py-4 flex flex-col gap-2">
+              <span className="text-lg text-white">Conta Corrente</span>
+              <h2 className="text-3xl text-white">
+                {visibled ? formatToBRL(balance) : "*******"}
+              </h2>
+            </div>
           </div>
         </div>
-      </div>
+      )}
       <div className="gap-8">{children}</div>
     </div>
   );
 }
 
-export function ExtractList() {
+interface ExtractListProps {
+  show: boolean;
+}
+
+export function ExtractList({ show }: ExtractListProps) {
   const transactions = useSelector(selectTransactions);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const dispatch = useDispatch();
@@ -98,6 +105,10 @@ export function ExtractList() {
       dispatch(deleteTransaction(id));
       setSelectedId(null);
     }
+  }
+
+  if (!show) {
+    return null;
   }
 
   if (transactions.length === 0) {

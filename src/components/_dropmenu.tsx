@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { IoMdClose } from "react-icons/io";
 import { useDispatch } from "react-redux";
 import { logout } from "@/features/auth";
@@ -42,34 +42,37 @@ export const DropdownMenu = ({ children }: DropdownMenuProps) => {
     setShow(false);
   };
 
-  const options = [
-    {
-      id: crypto.randomUUID(),
-      label: "Minha conta",
-      action: {
-        type: ActionTypeEnum.NAVIGATE,
-        value: "/account",
-      },
-    },
-    {
-      id: crypto.randomUUID(),
-      label: "Configurações",
-      action: {
-        type: ActionTypeEnum.NAVIGATE,
-        value: "/settings",
-      },
-    },
-    {
-      id: crypto.randomUUID(),
-      label: "Sair",
-      action: {
-        type: ActionTypeEnum.ACTION,
-        value: () => {
-          dispatch(logout());
+  const options = useMemo(
+    () => [
+      {
+        id: crypto.randomUUID(),
+        label: "Minha conta",
+        action: {
+          type: ActionTypeEnum.NAVIGATE,
+          value: "/account",
         },
       },
-    },
-  ];
+      {
+        id: crypto.randomUUID(),
+        label: "Configurações",
+        action: {
+          type: ActionTypeEnum.NAVIGATE,
+          value: "/settings",
+        },
+      },
+      {
+        id: crypto.randomUUID(),
+        label: "Sair",
+        action: {
+          type: ActionTypeEnum.ACTION,
+          value: () => {
+            dispatch(logout());
+          },
+        },
+      },
+    ],
+    []
+  );
 
   return (
     <div className="relative inline-block text-left" ref={menuRef}>
@@ -105,18 +108,19 @@ export const DropdownMenu = ({ children }: DropdownMenuProps) => {
               }
 
               return (
-                <Link
-                  key={option.id}
-                  href={option.action.value as ActionTypeValueNavigate}
-                  className={cn(
-                    "block px-4 pb-4 text-md text-center text-white border-b-1 border-white hover:border-azul-escuro",
-                    index > 0 && "pt-4",
-                    pathname === option.action.value && "border-azul-escuro"
-                  )}
-                  role="menuitem"
-                >
-                  <li>{option.label}</li>
-                </Link>
+                <li key={option.id}>
+                  <Link
+                    href={option.action.value as ActionTypeValueNavigate}
+                    className={cn(
+                      "block px-4 pb-4 text-md text-center text-white border-b-1 border-white hover:border-azul-escuro",
+                      index > 0 && "pt-4",
+                      pathname === option.action.value && "border-azul-escuro"
+                    )}
+                    role="menuitem"
+                  >
+                    {option.label}
+                  </Link>
+                </li>
               );
             })}
           </ul>

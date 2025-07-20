@@ -77,17 +77,18 @@ export const HamburgerSidebar = ({ show, onClose }: HamburgerSidebarProps) => {
               const isLast = index === settings.length - 1;
               const isCurrent = pathname === navItem.value;
               return (
-                <Link key={navItem.value} href={navItem.value} prefetch>
-                  <li
-                    className={cn(
-                      "flex-1 min-w-[115px] text-black text-center py-2 border-b-2 hover:text-azul-escuro",
-                      isLast && "border-b-0",
-                      isCurrent && " text-azul-claro font-bold xl:border-b-0"
-                    )}
-                  >
+                <li
+                  key={navItem.value}
+                  className={cn(
+                    "flex-1 min-w-[115px] text-black text-center py-2 border-b-2 hover:text-azul-escuro",
+                    isLast && "border-b-0",
+                    isCurrent && " text-azul-claro font-bold xl:border-b-0"
+                  )}
+                >
+                  <Link key={navItem.value} href={navItem.value} prefetch>
                     {navItem.label}
-                  </li>
-                </Link>
+                  </Link>
+                </li>
               );
             })}
           </ul>
