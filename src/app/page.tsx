@@ -8,13 +8,17 @@ import IconDispositivos from "@/shared/assets/IconeDispositivos.svg";
 import IconPontos from "@/shared/assets/IconePontos.svg";
 import IconPresente from "@/shared/assets/IconePresente.svg";
 import IconSaque from "@/shared/assets/IconeSaque.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import RegisterModal from "@/components/modal/RegisterModal";
 import LoginModal from "@/components/modal/LoginModal";
 
 export default function PageError() {
   const [showModalRegister, setShowModalRegister] = useState(false);
   const [showModalLogin, setShowModalLogin] = useState(false);
+
+  useEffect(() => {
+    localStorage.removeItem("user");
+  }, [])
 
   return (
     <main className="flex flex-col bg-gradiente-azul w-full h-auto lg:h-screen">
