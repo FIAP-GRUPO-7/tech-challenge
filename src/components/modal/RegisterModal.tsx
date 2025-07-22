@@ -4,6 +4,7 @@ import Login from "@/shared/assets/Login.svg";
 import Image from "next/image";
 import { register } from "@/features/auth";
 import { useDispatch } from "react-redux";
+import { Tooltip } from "react-tooltip";
 
 interface RegisterModalProps {
   onClose: () => void;
@@ -79,6 +80,10 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-xl"
+          data-tooltip-id="button"
+          data-tooltip-content="Clique para fechar o modal"
+          data-tooltip-place="bottom"
+          aria-label="Clique para fechar o modal"
         >
           ×
         </button>
@@ -125,6 +130,7 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
               className={`mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white ${
                 errors.email ? "border-erro" : "border-cinza-claro"
               }`}
+              aria-label="Digite seu email"
             />
             {errors.email && (
               <p className="text-erro text-xs mt-1">{errors.email}</p>
@@ -145,6 +151,7 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
               className={`mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white ${
                 errors.password ? "border-erro" : "border-cinza-claro"
               }`}
+              aria-label="Digite sua senha"
             />
             {errors.password && (
               <p className="text-erro text-xs mt-1">{errors.password}</p>
@@ -158,7 +165,23 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
               type="checkbox"
               checked={form.terms}
               onChange={handleChange}
-              className={`mr-2 mt-1 ${errors.terms ? "border-erro" : ""}`}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  setForm((prev) => ({
+                    ...prev,
+                    terms: !prev.terms,
+                  }));
+                  setErrors((prev) => ({
+                    ...prev,
+                    terms: "",
+                  }));
+                }
+              }}
+            className={`mr-2 mt-1 border-2 rounded-sm w-8 h-4 ${
+                errors.terms ? "border-erro" : "border-cinza-claro"
+              }`}
+            aria-label="Aceitar termos de uso"
             />
             <label htmlFor="terms" className="text-gray-600">
               Li e estou ciente quanto às condições de tratamento dos meus dados
@@ -173,11 +196,16 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
             <button
               type="submit"
               className="px-4 py-2 rounded font-bold text-branco bg-azul-claro"
+              data-tooltip-id="button"
+              data-tooltip-content="Clique para criar sua conta"
+              data-tooltip-place="top"
+              aria-label="Clique para criar sua conta"
             >
               Criar conta
             </button>
           </div>
-        </form>
+          <Tooltip id="button" />
+         </form>
       </div>
     </div>
   );

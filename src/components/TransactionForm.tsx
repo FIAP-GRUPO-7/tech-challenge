@@ -6,6 +6,7 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "@/store";
 import { selectBalance, addTransaction } from "@/features/transactions";
+import { Tooltip } from "react-tooltip";
 
 export default function TransactionForm() {
   const [type, setType] = useState("");
@@ -67,7 +68,7 @@ export default function TransactionForm() {
                 id="transaction-type"
                 value={type}
                 onChange={(e) => setType(e.target.value)}
-                className="appearance-none bg-white w-full h-[48px] rounded-md border-2 border-azul-claro px-4 text-text-field"
+                className={`appearance-none mt-1 w-full px-3 py-2 rounded-md shadow-sm focus:border focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white `}
                 aria-required="true"
               >
                 <option value="">Selecione o tipo de transação</option>
@@ -93,7 +94,7 @@ export default function TransactionForm() {
               inputMode="decimal"
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              className="bg-white w-full h-[48px] rounded-md border-2 border-azul-claro px-4 text-center text-text-field"
+              className="bg-white w-full h-[48px] rounded-md px-4 text-center text-text-field focus:border focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               placeholder="Digite o valor"
               aria-required="true"
             />
@@ -103,10 +104,14 @@ export default function TransactionForm() {
             className="w-full max-w-[250px] h-[48px]"
             hasIcon
             type="submit"
-            aria-label="Concluir transação"
+            aria-label="Clique para concluir a transação"
+            data-tooltip-id="button"
+            data-tooltip-content="Clique para concluir a transação"
+            data-tooltip-place="top"
           >
             Concluir transação
           </Button>
+          <Tooltip id="button" />
         </fieldset>
       </form>
     </section>

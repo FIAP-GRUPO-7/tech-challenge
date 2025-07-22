@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { selectUser } from "@/features/auth";
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { Tooltip } from "react-tooltip";
 
 export default function NotFound() {
   const user = useSelector(selectUser);
@@ -42,6 +43,10 @@ export default function NotFound() {
             <button
               onClick={goBack}
               className="cursor-pointer rounded-md py-2 px-3 font-bold text-branco bg-azul-claro"
+              data-tooltip-id="button"
+              data-tooltip-content="Clique para voltar ao início"
+              data-tooltip-place="bottom"
+              aria-label="Clique para voltar ao início"
             >
               Voltar ao início
             </button>
@@ -49,6 +54,8 @@ export default function NotFound() {
         </section>
         <Footer />
       </main>
+
+      <Tooltip id="button" />
     </>
   );
 }

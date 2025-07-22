@@ -4,6 +4,7 @@ import { Button } from "@/components/_button";
 import { Input } from "@/components/_input";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser, updateUser } from "@/features/auth";
+import { Tooltip } from "react-tooltip";
 
 export default function PageAccount() {
   const [name, setName] = useState("");
@@ -46,6 +47,8 @@ export default function PageAccount() {
               placeholder="Nome completo"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              className={`rounded-md border border-cinza-claro focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white`}
+              aria-label="Digite seu nome completo"
             />
           </div>
 
@@ -57,6 +60,8 @@ export default function PageAccount() {
               placeholder="email@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className={`rounded-md border border-cinza-claro focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white`}
+              aria-label="Digite seu e-mail"
             />
           </div>
 
@@ -67,6 +72,8 @@ export default function PageAccount() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              className={`rounded-md border border-cinza-claro focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white`}
+              aria-label="Digite sua senha"
             />
           </div>
 
@@ -74,10 +81,15 @@ export default function PageAccount() {
             type="button"
             onClick={onSubmit}
             className="sm:w-full md:max-w-[250px] h-[48px]"
+            data-tooltip-id="button"
+            data-tooltip-content="Clique para salvar as alterações"
+            data-tooltip-place="top"
+            aria-label="Clique para salvar as alterações"
           >
             Salvar alterações
           </Button>
         </div>
+        <Tooltip id="button" />
       </form>
     </section>
   );

@@ -7,6 +7,7 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import { IoMdClose } from "react-icons/io";
 import { useDispatch } from "react-redux";
 import { logout } from "@/features/auth";
+import { Tooltip } from "react-tooltip";
 
 interface DropdownMenuProps {
   children: React.ReactNode;
@@ -101,6 +102,7 @@ export const DropdownMenu = ({ children }: DropdownMenuProps) => {
                       "text-center w-full pb-4 cursor-pointer",
                       index > 0 && "pt-4"
                     )}
+                    aria-label={`Clique para ${option.label.toLowerCase()}`}
                   >
                     <li className="">{option.label}</li>
                   </button>
