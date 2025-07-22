@@ -1,17 +1,20 @@
-'use client'
-import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
+"use client";
+import React, { useMemo } from "react";
+import Image from "next/image";
+import Link from "next/link";
 
 const ServicesModal = () => {
-  const servicos = [
-    { nome: 'Empréstimos', icone: 'emprestimo.png' },
-    { nome: 'Meus Cartões', icone: 'cartoes.png', link: '/cartoes' },
-    { nome: 'Doações', icone: 'doacoes.png' },
-    { nome: 'Pix', icone: 'pix.png' },
-    { nome: 'Seguros', icone: 'seguros.png' },
-    { nome: 'Créditos', icone: 'creditos.png' },
-  ];
+  const servicos = useMemo(
+    () => [
+      { nome: "Empréstimos", icone: "emprestimo.png" },
+      { nome: "Meus Cartões", icone: "cartoes.png", link: "/cartoes" },
+      { nome: "Doações", icone: "doacoes.png" },
+      { nome: "Pix", icone: "pix.png" },
+      { nome: "Seguros", icone: "seguros.png" },
+      { nome: "Créditos", icone: "creditos.png" },
+    ],
+    []
+  );
 
   return (
     <section className="w-full bg-[var(--color-fundo-principal)] rounded-md p-6">
@@ -52,5 +55,3 @@ const ServicesModal = () => {
 };
 
 export default ServicesModal;
-
-

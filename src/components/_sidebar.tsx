@@ -92,7 +92,7 @@ export const Sidebar: React.FC = () => {
       <nav>
         <ul className="px-6 flex flex-wrap justify-between xl:flex-col xl:w-full xl:text-center">
           {settings.map((navItem, index) => {
-            const isLast = index === settings.length - 1;
+            const isLast = index !== settings.length - 1;
             const isCurrent = pathname === navItem.value;
 
             // Define as props do Link condicionalmente
@@ -102,17 +102,16 @@ export const Sidebar: React.FC = () => {
             }
 
             return (
-              <Link key={navItem.value} href={navItem.value} {...linkProps}>
-                <li
-                  className={cn(
-                    "flex-1 min-w-[115px] text-center py-4 hover:text-azul-escuro",
-                    !isLast && "xl:border-b-2", 
-                    isCurrent && "border-b-2 text-azul-escuro font-bold"
-                  )}
-                >
-                  {navItem.label}
-                </li>
-              </Link>
+              <li
+                key={navItem.value}
+                className={cn(
+                  "flex-1 min-w-[115px] text-center py-4 hover:text-azul-escuro",
+                  isLast && "xl:border-b-2",
+                  isCurrent && "border-b-2 text-azul-escuro font-bold"
+                )}
+              >
+                <Link href={navItem.value} {...linkProps}>{navItem.label}</Link>
+              </li>
             );
           })}
         </ul>
@@ -167,17 +166,18 @@ export const HamburgerSidebar: React.FC<HamburgerSidebarProps> = ({ show, onClos
               }
 
               return (
-                <Link key={navItem.value} href={navItem.value} {...linkProps}>
-                  <li
-                    className={cn(
-                      "flex-1 min-w-[115px] text-black text-center py-2 border-b-2 hover:text-azul-escuro",
-                      isLast && "border-b-0",
-                      isCurrent && " text-azul-claro font-bold xl:border-b-0"
-                    )}
-                  >
+                <li
+                  key={navItem.value}
+                  className={cn(
+                    "flex-1 min-w-[115px] text-black text-center py-2 border-b-2 hover:text-azul-escuro",
+                    isLast && "border-b-0",
+                    isCurrent && " text-azul-claro font-bold xl:border-b-0"
+                  )}
+                >
+                  <Link key={navItem.value} href={navItem.value} prefetch {...linkProps}>
                     {navItem.label}
-                  </li>
-                </Link>
+                  </Link>
+                </li>
               );
             })}
           </ul>

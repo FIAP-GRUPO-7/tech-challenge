@@ -1,13 +1,15 @@
+"use client";
 import { useState, ChangeEvent, FormEvent } from "react";
 import Login from "@/shared/assets/Login.svg";
 import Image from "next/image";
+import { register } from "@/features/auth";
+import { useDispatch } from "react-redux";
 
 interface RegisterModalProps {
   onClose: () => void;
 }
 
 export default function RegisterModal({ onClose }: RegisterModalProps) {
-
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -21,6 +23,8 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
     password: "",
     terms: "",
   });
+
+  const dispatch = useDispatch();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -53,24 +57,18 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
     e.preventDefault();
     if (!validate()) return;
 
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
+    const id = crypto.randomUUID();
 
-    const exists = users.some((u: any) => u.email === form.email);
-    if (exists) {
-      setErrors((prev) => ({
-        ...prev,
-        email: "Já existe um usuário com este email.",
-      }));
-      return;
-    }
+    dispatch(
+      register({
+        id,
+        name: form.name,
+        email: form.email,
+        password: form.password,
+        terms: form.terms,
+      })
+    );
 
-    users.push({
-      name: form.name,
-      email: form.email,
-      password: form.password,
-      terms: form.terms,
-    });
-    localStorage.setItem("users", JSON.stringify(users));
     onClose();
     alert("Usuário cadastrado com sucesso!");
   };
