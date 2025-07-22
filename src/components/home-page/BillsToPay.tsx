@@ -8,16 +8,27 @@ export default function BillsToPay() {
   ];
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow w-full">
-      <h3 className="text-gray-600 text-sm mb-4">Contas a pagar</h3>
-      <ul>
+    <div className="bg-[var(--color-branco)] p-6 rounded-md shadow-md w-full">
+      <h3 className="text-[var(--color-preto)] text-lg font-semibold mb-4">
+        Contas a Pagar
+      </h3>
+
+      <ul className="space-y-4">
         {bills.map((bill, index) => (
-          <li key={index} className="flex justify-between text-sm py-1 border-b last:border-none">
+          <li
+            key={index}
+            className="flex items-center justify-between border-b border-[var(--color-azul-claro)] pb-2 last:border-none"
+          >
             <div>
-              <span className="font-medium">{bill.name}</span>
-              <span className="ml-2 text-gray-500">({bill.dueDate})</span>
+              <p className="text-[var(--color-preto)] font-medium text-base">
+                {bill.name}
+              </p>
+              <p className="text-sm text-gray-500">Vence em {bill.dueDate}</p>
             </div>
-            <span className="text-red-500">R$ {bill.amount.toFixed(2)}</span>
+
+            <span className="text-[var(--color-erro)] font-semibold text-base">
+              R$ {bill.amount.toFixed(2)}
+            </span>
           </li>
         ))}
       </ul>
