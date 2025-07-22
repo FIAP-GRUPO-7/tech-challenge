@@ -11,6 +11,7 @@ import RegisterLoginActions from "@/components/RegisterLoginActions";
 import { useSelector } from "react-redux";
 import { selectLoading, selectUser } from "@/features/auth";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function PageAuth() {
   const user = useSelector(selectUser);
@@ -25,6 +26,10 @@ export default function PageAuth() {
       </div>
     );
   }
+
+  useEffect(() => {
+    localStorage.removeItem("user");
+  }, [])
 
   return (
     <main className="flex flex-col bg-gradiente-azul w-full h-auto lg:h-screen">
