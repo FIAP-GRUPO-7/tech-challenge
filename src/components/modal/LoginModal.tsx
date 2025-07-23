@@ -4,13 +4,19 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import Cadastro from "@/shared/assets/Cadastro.svg";
 import Image from "next/image";
 import Link from "next/link";
-import { useAuth } from "@/context/auth";
+import { login } from "@/features/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { AppState, AppDispatch } from "@/store";
 
 interface LoginModalProps {
   onClose: () => void;
 }
 
 export default function LoginModal({ onClose }: LoginModalProps) {
+  const dispatch = useDispatch<AppDispatch>();
+  const auth = useSelector((state: AppState) => state.auth);
+  const { error, loading } = auth;
+
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -21,7 +27,6 @@ export default function LoginModal({ onClose }: LoginModalProps) {
     password: "",
   });
 
-  const { signIn, error } = useAuth();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setForm((prev) => ({
@@ -48,10 +53,7 @@ export default function LoginModal({ onClose }: LoginModalProps) {
     if (!validate()) return;
 
     try {
-      await signIn(form.email, form.password);
-      if (!error) {
-        onClose(); // só fecha se login ok
-      }
+      dispatch(login({ email: form.email, password: form.password }));
     } catch (err) {
       console.error(err);
     }
@@ -74,7 +76,7 @@ export default function LoginModal({ onClose }: LoginModalProps) {
             height={140}
             className="mx-auto"
           />
-          <h2 className="text-lg font-bold pt-4 text-base">Login</h2>
+          <h2 className="font-bold pt-4 text-base">Login</h2>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 px-6">
@@ -128,7 +130,7 @@ export default function LoginModal({ onClose }: LoginModalProps) {
               type="submit"
               className="px-4 py-2 rounded font-bold text-branco bg-azul-claro cursor-pointer"
             >
-              Acessar
+              {loading ? "carregando..." : "Acessar"}
             </button>
           </div>
         </form>
