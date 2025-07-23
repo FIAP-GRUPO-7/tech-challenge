@@ -6,7 +6,6 @@ import { useState } from "react";
 import RegisterModal from "./modal/RegisterModal";
 import LoginModal from "./modal/LoginModal";
 import Link from "next/link";
-import { MdMenu } from "react-icons/md";
 import { Tooltip } from "react-tooltip";
 
 export const Header = () => {
@@ -19,10 +18,6 @@ export const Header = () => {
         className="flex items-center justify-around py-5 bg-black text-sm"
         aria-label="Cabeçalho principal"
       >
-        <button type="button" className="sm:hidden" aria-label="Abrir menu">
-          <MdMenu size={24} color="white" />
-        </button>
-
         <ul className="flex items-center gap-8 text-branco font-medium">
           <li>
             <Link href="/home" aria-label="Ir para a página inicial">
