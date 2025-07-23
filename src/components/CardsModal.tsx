@@ -1,6 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import ModalCartoes from "./ModalCartoes";
+import { useSelector } from "react-redux";
+import { selectUser } from "@/features/auth";
+import { Tooltip } from "react-tooltip";
 
 const CardsModal = () => {
   const [modalAberto, setModalAberto] = useState(false);
@@ -10,6 +13,7 @@ const CardsModal = () => {
   const [cartaoSelecionado, setCartaoSelecionado] = useState<
     "fisico" | "digital" | null
   >(null);
+  const user = useSelector(selectUser);
 
   const abrirModal = (
     tipo: "configurar" | "bloquear",
@@ -40,7 +44,7 @@ const CardsModal = () => {
             <p className="text-[12px] not-italic">Platinum</p>
           </div>
           <div>
-            <p className="text-[12px] not-italic">Joana Fonseca Gomes</p>
+            <p className="text-[12px] not-italic">{user?.name || ""}</p>
             <p className="text-lg tracking-wider">*********</p>
           </div>
         </div>
@@ -52,6 +56,10 @@ const CardsModal = () => {
             <button
               onClick={() => abrirModal("configurar", "fisico")}
               className="w-[160px] bg-[var(--color-azul-escuro)] hover:bg-[var(--color-azul-claro)] text-[var(--color-branco)] text-sm py-2 px-3 rounded-md transition-colors duration-200 ease-in-out"
+              data-tooltip-id="button"
+              data-tooltip-content="Clique para configurar o cartão digital"
+              aria-label="Clique para configurar o cartão digital"
+              data-tooltip-place="bottom"
             >
               Configurar
             </button>
@@ -59,6 +67,10 @@ const CardsModal = () => {
             <button
               onClick={() => abrirModal("bloquear", "fisico")}
               className="w-[160px] text-[var(--color-erro)] border border-[var(--color-vermelho)] text-sm py-2 px-3 rounded-md hover:bg-[#e999994d] transition-colors duration-200 ease-in-out"
+              data-tooltip-id="button"
+              data-tooltip-content="Clique para bloquear ou desbloquear o cartão digital"
+              aria-label="Clique para bloquear ou desbloquear o cartão digital"
+              data-tooltip-place="bottom"
             >
               Bloqueio/Desbloqueio
             </button>
@@ -78,7 +90,7 @@ const CardsModal = () => {
             <p className="text-[12px] not-italic">Platinum</p>
           </div>
           <div>
-            <p className="text-[12px] not-italic">Joana Fonseca Gomes</p>
+            <p className="text-[12px] not-italic">{user?.name || ""}</p>
             <p className="text-lg tracking-wider">*********</p>
           </div>
         </div>
@@ -90,6 +102,10 @@ const CardsModal = () => {
             <button
               onClick={() => abrirModal("configurar", "digital")}
               className="w-[160px] bg-[var(--color-azul-escuro)] hover:bg-[var(--color-azul-claro)] text-[var(--color-branco)] text-sm py-2 px-3 rounded-md transition-colors duration-200 ease-in-out"
+              data-tooltip-id="button"
+              data-tooltip-content="Clique para configurar o cartão digital"
+              aria-label="Clique para configurar o cartão digital"
+              data-tooltip-place="bottom"
             >
               Configurar
             </button>
@@ -97,6 +113,10 @@ const CardsModal = () => {
             <button
               onClick={() => abrirModal("bloquear", "digital")}
               className="w-[160px] text-[var(--color-erro)] border border-[var(--color-vermelho)] text-sm py-2 px-3 rounded-md hover:bg-[#e999994d] transition-colors duration-200 ease-in-out"
+              data-tooltip-id="button"
+              data-tooltip-content="Clique para bloquear ou desbloquear o cartão digital"
+              aria-label="Clique para bloquear ou desbloquear o cartão digital"
+              data-tooltip-place="bottom"
             >
               Bloqueio/Desbloqueio
             </button>
@@ -116,6 +136,7 @@ const CardsModal = () => {
           />
         </div>
       )}
+      <Tooltip id="button" />
     </section>
   );
 };

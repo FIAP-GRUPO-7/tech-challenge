@@ -1,5 +1,7 @@
 //ConfirmacaoBloqueioModal.tsx
 
+import { Tooltip } from "react-tooltip";
+
 interface ConfirmacaoBloqueioModalProps {
   isOpen: boolean;
   onConfirm: () => void;
@@ -34,17 +36,26 @@ export default function ConfirmacaoBloqueioModal({
           <button
             onClick={onCancel}
             className="px-6 py-2 rounded-md border-2 border-[var(--color-azul-escuro)] bg-[var(--color-branco)] text-[var(--color-azul-escuro)] font-medium hover:brightness-95 transition-colors duration-200 ease-in-out"
+            data-tooltip-id="button"
+            data-tooltip-content="Clique para manter a configuração atual"
+            aria-label="Clique para manter a configuração atual"
+            data-tooltip-place="bottom"
           >
             Manter
           </button>
           <button
             onClick={onConfirm}
             className="px-6 py-2 rounded-md bg-[var(--color-erro)] text-[var(--color-branco)] font-medium hover:brightness-110 transition-colors duration-200 ease-in-out"
+            data-tooltip-id="button"
+            data-tooltip-content={`Clique para ${textoBotao}`}
+            aria-label={`Clique para ${textoBotao}`}
+            data-tooltip-place="bottom"
           >
             {textoBotao}
           </button>
         </div>
       </div>
+      <Tooltip id="button" />
     </section>
   );
 }

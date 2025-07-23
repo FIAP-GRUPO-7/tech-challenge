@@ -2,6 +2,9 @@
 
 import React, { useState } from "react";
 import ConfirmacaoBloqueioModal from "./ConfirmacaoBloqueioModal";
+import { useSelector } from "react-redux";
+import { selectUser } from "@/features/auth";
+import { Tooltip } from "react-tooltip";
 
 interface ModalCartoesProps {
   tipo: "configurar" | "bloquear" | null;
@@ -14,6 +17,8 @@ const ModalCartoes: React.FC<ModalCartoesProps> = ({
   cartao,
   onClose,
 }) => {
+  const user = useSelector(selectUser);
+
   const [opcoes, setOpcoes] = useState({
     nfc: false,
     internacionais: false,
@@ -49,7 +54,7 @@ const ModalCartoes: React.FC<ModalCartoesProps> = ({
           <p className="text-[12px] not-italic">Platinum</p>
         </div>
         <div>
-          <p className="text-[12px] not-italic">Joana Fonseca Gomes</p>
+          <p className="text-[12px] not-italic">{user?.name || ""}</p>
           <p className="text-lg tracking-wider">*********</p>
         </div>
       </div>
@@ -70,6 +75,10 @@ const ModalCartoes: React.FC<ModalCartoesProps> = ({
         <button
           onClick={onClose}
           className="absolute top-6 right-9 text-[var(--color-branco)] text-xl"
+          data-tooltip-id="button"
+          data-tooltip-content="Clique para fechar o modal"
+          aria-label="Clique para fechar o modal"
+          data-tooltip-place="bottom"
         >
           x
         </button>
@@ -109,6 +118,12 @@ const ModalCartoes: React.FC<ModalCartoesProps> = ({
                       checked={opcoes[chave as keyof typeof opcoes]}
                       onChange={() => toggleOpcao(chave as keyof typeof opcoes)}
                       className="w-5 h-5 text-[var(--color-azul-escuro)] border rounded"
+                      onKeyDown={e => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          toggleOpcao(chave as keyof typeof opcoes);
+                        }
+                      }}
                     />
                     {label}
                   </label>
@@ -119,12 +134,20 @@ const ModalCartoes: React.FC<ModalCartoesProps> = ({
                 <button
                   onClick={onClose}
                   className="w-[180px] py-2 border-2 border-[var(--color-azul-escuro)] text-[var(--color-azul-escuro)] font-semibold rounded-md hover:bg-[#e9f1ff] transition-colors duration-200 ease-in-out"
+                  data-tooltip-id="button"
+                  data-tooltip-content="Clique para cancelar a ação"
+                  aria-label="Clique para cancelar a ação"
+                  data-tooltip-place="bottom"
                 >
                   Cancelar
                 </button>
                 <button
                   onClick={onClose}
                   className="w-[180px] py-2 bg-[var(--color-azul-escuro)] text-[var(--color-branco)] font-semibold rounded-md hover:bg-[var(--color-azul-claro)] transition-colors duration-200 ease-in-out"
+                  data-tooltip-id="button"
+                  data-tooltip-content="Clique para salvar configurações"
+                  aria-label="Clique para salvar configurações"
+                  data-tooltip-place="bottom"
                 >
                   Salvar Configurações
                 </button>
@@ -152,6 +175,10 @@ const ModalCartoes: React.FC<ModalCartoesProps> = ({
                 <button
                   onClick={onClose}
                   className="w-[180px] py-2 border-2 border-[var(--color-azul-escuro)] text-[var(--color-azul-escuro)] font-semibold rounded-md hover:bg-[#e9f1ff] transition-colors duration-200 ease-in-out"
+                  data-tooltip-id="button"
+                  data-tooltip-content="Clique para cancelar a ação"
+                  aria-label="Clique para cancelar a ação"
+                  data-tooltip-place="bottom"
                 >
                   Cancelar
                 </button>
@@ -162,6 +189,10 @@ const ModalCartoes: React.FC<ModalCartoesProps> = ({
                       ? "border-[var(--color-azul-escuro)] text-[var(--color-azul-escuro)] hover:bg-[#e9f1ff]"
                       : "border-[var(--color-erro)] text-[var(--color-erro)] hover:bg-[#ffe6e6] transition-colors duration-200 ease-in-out"
                   }`}
+                  data-tooltip-id="button"
+                  data-tooltip-content={`Clique para ${bloqueado ? "desbloquear" : "bloquear"} cartão`}
+                  aria-label={`Clique para ${bloqueado ? "desbloquear" : "bloquear"} cartão`}
+                  data-tooltip-place="bottom"
                 >
                   {bloqueado ? "Desbloquear" : "Bloquear"}
                 </button>
@@ -183,6 +214,7 @@ const ModalCartoes: React.FC<ModalCartoesProps> = ({
         onCancel={() => setShowConfirmacao(false)}
         bloqueado={bloqueado}
       />
+      <Tooltip id="button" />
     </>
   );
 };
