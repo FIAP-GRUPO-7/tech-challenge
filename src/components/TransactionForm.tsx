@@ -11,6 +11,10 @@ import { Tooltip } from "react-tooltip";
 export default function TransactionForm() {
   const [type, setType] = useState("");
   const [value, setValue] = useState("");
+  const [errors, setErrors] = useState({
+    type: "",
+    value: "",
+  });
   const transactionTypes = useSelector(
     (state: AppState) => state.transactionsTypes.types
   );
@@ -22,16 +26,30 @@ export default function TransactionForm() {
     e.preventDefault();
 
     if (!type || !value) {
-      alert("Preencha todos os campos.");
+      const newErrors = {
+        type: !type ? "Tipo de transação é obrigatório." : "",
+        value: !value ? "Valor é obrigatório." : "",
+      };
+      setErrors(newErrors);
       return;
     }
 
     const valorNumerico = parseFloat(value.replace(",", "."));
 
     if (isNaN(valorNumerico) || valorNumerico <= 0) {
-      alert("Digite um valor válido.");
+      const newErrors = {
+        type: "",
+        value: "Digite um valor válido.",
+      };
+      setErrors(newErrors);
       return;
     }
+
+    const newErrors = {
+        type: "",
+        value: "",
+    };
+    setErrors(newErrors);
 
     const isSaida = type === "Saque" || type === "Transferência";
 
@@ -68,7 +86,9 @@ export default function TransactionForm() {
                 id="transaction-type"
                 value={type}
                 onChange={(e) => setType(e.target.value)}
-                className={`appearance-none mt-1 w-full px-3 py-2 rounded-md shadow-sm focus:border focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white `}
+                className={`appearance-none mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:border focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white ${
+                  errors.type ? "border-erro" : "border-cinza-claro"
+                }`}
                 aria-required="true"
               >
                 <option value="">Selecione o tipo de transação</option>
@@ -82,6 +102,9 @@ export default function TransactionForm() {
                 <IoMdArrowDropdown size={20} className="fill-azul-escuro" />
               </div>
             </div>
+            {errors.type && (
+                <p className="text-erro text-xs mt-1">{errors.type}</p>
+            )}
           </div>
 
           <div className="flex flex-col gap-2 max-w-[250px]">
@@ -94,10 +117,14 @@ export default function TransactionForm() {
               inputMode="decimal"
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              className="bg-white w-full h-[48px] rounded-md px-4 text-center text-text-field focus:border focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className={`mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white ${
+                errors.value ? "border-erro" : "border-cinza-claro"}`}
               placeholder="Digite o valor"
               aria-required="true"
             />
+            {errors.value && (
+                <p className="text-erro text-xs mt-1">{errors.value}</p>
+            )}
           </div>
 
           <Button
