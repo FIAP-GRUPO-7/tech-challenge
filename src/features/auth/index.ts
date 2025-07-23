@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import Cookies from "js-cookie";
 
 export interface User {
   id: string;
@@ -15,15 +16,13 @@ export interface AuthState {
 }
 
 const storedUser =
-  typeof window !== "undefined"
-    ? localStorage.getItem("user")
-    : null;
+  typeof window !== "undefined" ? localStorage.getItem("user") : null;
 
 const initialState: AuthState = {
   user: storedUser ? JSON.parse(storedUser) : null,
   error: "",
   loading: false,
-}
+};
 
 export const login = createAsyncThunk<
   User,
@@ -31,22 +30,67 @@ export const login = createAsyncThunk<
   { rejectValue: string }
 >("auth/login", async ({ email, password }, { rejectWithValue }) => {
   try {
-    const usersJSON = localStorage.getItem("users");
-    if (!usersJSON) return rejectWithValue("Nenhum usuário registrado.");
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/auth`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
 
-    const users = JSON.parse(usersJSON) as User[];
-
-    const found = users.find(
-      (user) => user.email === email && user.password === password
-    );
-
-    if (!found) {
+    if (!res.ok) {
       return rejectWithValue("E-mail ou senha inválidos.");
     }
 
-    return found;
-  } catch {
+    const data = await res.json();
+    const token = data?.result?.token;
+
+    if (!token) {
+      return rejectWithValue("Token não retornado pela API.");
+    }
+
+    Cookies.set("token", token, { secure: true });
+    if (typeof window !== "undefined") {
+      localStorage.setItem("token", token);
+    }
+
+    const user: User = {
+      id: "",
+      name: email.split("@")[0],
+      email,
+      password,
+      terms: true,
+    };
+
+    if (typeof window !== "undefined") {
+      localStorage.setItem("user", JSON.stringify(user));
+    }
+
+    return user;
+  } catch (err) {
+    console.error(err);
     return rejectWithValue("Erro ao processar login.");
+  }
+});
+
+export const registerUser = createAsyncThunk<
+  void,
+  { name: string; email: string; password: string },
+  { rejectValue: string }
+>("auth/register", async ({ name, email, password }, { rejectWithValue }) => {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: name, email, password }),
+    });
+
+    if (!res.ok) {
+      return rejectWithValue("Erro ao registrar usuário.");
+    }
+
+    await res.json();
+  } catch (err) {
+    console.error(err);
+    return rejectWithValue("Erro ao processar registro.");
   }
 });
 
@@ -61,21 +105,8 @@ const authSlice = createSlice({
 
       if (typeof window !== "undefined") {
         localStorage.removeItem("user");
-      }
-    },
-    register: (state, action) => {
-      const users = JSON.parse(localStorage.getItem("users") || "[]");
-
-      const exists = users.some((u: User) => u.email === action.payload.email);
-
-      if(exists) {
-        state.error = "Já existe um usuário com esse E-mail."
-      } else {
-        users.push({
-          ...action.payload
-        })
-
-        localStorage.setItem("users", JSON.stringify(users))
+        localStorage.removeItem("token");
+        Cookies.remove("token");
       }
     },
     updateUser: (state, action) => {
@@ -84,24 +115,11 @@ const authSlice = createSlice({
       state.error = null;
 
       if (typeof window !== "undefined") {
-        // Atualiza usuário atual
         localStorage.setItem("user", JSON.stringify(updatedUser));
-
-        // Atualiza também no array de usuários registrados
-        const usersJSON = localStorage.getItem("users");
-        if (usersJSON) {
-          const users = JSON.parse(usersJSON) as User[];
-
-          const updatedUsers = users.map((u) =>
-            u.id === updatedUser.id ? updatedUser : u
-          );
-
-          localStorage.setItem("users", JSON.stringify(updatedUsers));
-        }
       }
 
-      alert("Dados alterados com sucesso!")
-    }
+      alert("Dados alterados com sucesso!");
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -122,10 +140,23 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload ?? "Erro desconhecido.";
       });
+    builder
+      .addCase(registerUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(registerUser.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? "Erro ao registrar.";
+      });
   },
 });
 
-export const { logout, updateUser, register } = authSlice.actions;
+export const { logout, updateUser } = authSlice.actions;
 
 export const selectUser = (state: { auth: AuthState }) => state.auth.user;
 export const selectIsAuthenticad = (state: { auth: AuthState }) => !!state.auth.user;

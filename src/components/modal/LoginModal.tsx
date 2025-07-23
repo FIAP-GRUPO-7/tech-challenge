@@ -4,19 +4,16 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import Cadastro from "@/shared/assets/Cadastro.svg";
 import Image from "next/image";
 import Link from "next/link";
-import { login } from "@/features/auth";
-import { useDispatch, useSelector } from "react-redux";
-import { AppState, AppDispatch } from "@/store";
+import Cookies from "js-cookie";
+import { login } from "@/lib/api";
+import { useRouter } from "next/navigation";
+
 
 interface LoginModalProps {
   onClose: () => void;
 }
 
 export default function LoginModal({ onClose }: LoginModalProps) {
-  const dispatch = useDispatch<AppDispatch>();
-  const auth = useSelector((state: AppState) => state.auth);
-  const { error, loading } = auth;
-
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -26,6 +23,9 @@ export default function LoginModal({ onClose }: LoginModalProps) {
     email: "",
     password: "",
   });
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -48,16 +48,36 @@ export default function LoginModal({ onClose }: LoginModalProps) {
     return Object.values(newErrors).every((err) => !err);
   };
 
+  const router = useRouter();
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validate()) return;
 
+    setLoading(true);
+    setError("");
+
     try {
-      dispatch(login({ email: form.email, password: form.password }));
-    } catch (err) {
+      const result = await login(form.email, form.password);
+
+      Cookies.set("token", result.token, {
+        secure: true,
+        sameSite: "lax",
+      });
+
+      localStorage.setItem("user", JSON.stringify({ email: form.email }));
+
+      alert("Login realizado com sucesso!");
+
+      router.push("/home");
+    } catch (err: any) {
       console.error(err);
+      setError(err.message || "Erro ao autenticar.");
+    } finally {
+      setLoading(false);
     }
   };
+
 
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
@@ -128,9 +148,10 @@ export default function LoginModal({ onClose }: LoginModalProps) {
           <div className="flex justify-center mt-8">
             <button
               type="submit"
+              disabled={loading}
               className="px-4 py-2 rounded font-bold text-branco bg-azul-claro cursor-pointer"
             >
-              {loading ? "carregando..." : "Acessar"}
+              {loading ? "Carregando..." : "Acessar"}
             </button>
           </div>
         </form>
