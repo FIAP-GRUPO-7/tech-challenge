@@ -49,7 +49,7 @@ const CardsModal = () => {
           </div>
         </div>
 
-        <div className="flex flex-col justify-between">
+        <div className="flex flex-col justify-between mx-auto md:mx-0">
           <p className="text-[var(--color-preto)] mb-2">Cartão Físico</p>
 
           <div className="flex flex-col space-y-1 mb-2">
@@ -95,7 +95,7 @@ const CardsModal = () => {
           </div>
         </div>
 
-        <div className="flex flex-col justify-between">
+        <div className="flex flex-col justify-between mx-auto md:mx-0">
           <p className="text-[var(--color-preto)] mb-2">Cartão Digital</p>
 
           <div className="flex flex-col space-y-1 mb-2">

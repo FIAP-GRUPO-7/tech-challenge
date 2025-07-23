@@ -63,8 +63,7 @@ const ModalCartoes: React.FC<ModalCartoesProps> = ({
 
   return (
     <>
-      <div className="bg-[var(--color-fundo-principal)] w-full h-full sm:max-w-[665px] sm:h-[670px] p-6 sm:rounded-xl shadow-lg relative flex flex-col overflow-y-auto">
-        <div className="bg-[var(--color-azul-escuro)] text-[var(--color-branco)] text-center text-xl font-bold py-4 rounded-md">
+      <div className="bg-[var(--color-fundo-principal)] w-full max-w-[95vw] sm:max-w-[665px] max-h-[90vh] p-4 sm:p-6 sm:rounded-xl shadow-lg relative flex flex-col overflow-y-auto">        <div className="bg-[var(--color-azul-escuro)] text-[var(--color-branco)] text-center text-xl font-bold py-4 rounded-md">
           {tipo === "configurar"
             ? "Configurar Cartão"
             : bloqueado
@@ -96,7 +95,7 @@ const ModalCartoes: React.FC<ModalCartoesProps> = ({
                 Personalize as funções do seu cartão.
               </p>
 
-              <div className="flex flex-col gap-4 items-start ml-[110px]">
+              <div className="flex flex-col gap-4 items-start md:ml-[110px]">
                 {[
                   { chave: "nfc", label: "Ativar/Desativar aproximação (NFC)" },
                   {
@@ -171,8 +170,7 @@ const ModalCartoes: React.FC<ModalCartoesProps> = ({
                   : "Você poderá desbloqueá-lo ou solicitar um novo depois."}
               </p>
 
-              <div className="flex justify-center gap-6 mb-10">
-                <button
+              <div className="flex flex-col items-center gap-4 mb-10 sm:flex-row sm:justify-center sm:gap-6">                <button
                   onClick={onClose}
                   className="w-[180px] py-2 border-2 border-[var(--color-azul-escuro)] text-[var(--color-azul-escuro)] font-semibold rounded-md hover:bg-[#e9f1ff] transition-colors duration-200 ease-in-out"
                   data-tooltip-id="button"
