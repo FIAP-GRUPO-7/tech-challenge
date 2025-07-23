@@ -1,84 +1,70 @@
 "use client";
 import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 import { Button } from "@/components/_button";
 import { Input } from "@/components/_input";
-import { useDispatch, useSelector } from "react-redux";
-import { selectUser, updateUser } from "@/features/auth";
+import { getUserData } from "@/lib/api";
 
 export default function PageAccount() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const user = useSelector(selectUser);
-  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user) {
+    async function fetchUser() {
       try {
-        setName(user.name || "");
-        setEmail(user.email || "");
-        setPassword(user.password || "");
+        const token = Cookies.get("token");
+        if (!token) {
+          console.error("Usuário não autenticado");
+          return;
+        }
+        const user = await getUserData(token);
+        setName(user.name);
+        setEmail(user.email);
       } catch (e) {
-        console.error("Erro ao recuperar dados:", e);
+        console.error("Erro ao buscar dados do usuário:", e);
+      } finally {
+        setLoading(false);
       }
     }
-  }, [user]);
+    fetchUser();
+  }, []);
 
-  const onSubmit = () => {
-    dispatch(updateUser({ name, email, password }));
-  };
+  if (loading) return <p>Carregando dados...</p>;
 
   return (
-    <section
-      aria-labelledby="page-account-title"
-      className="w-full max-w-[1027px] h-[541px] bg-cinza-escuro rounded-md py-6 px-20 flex flex-col gap-8"
-    >
-      <h2 id="page-account-title" className="text-2xl font-bold">
-        Minha conta
-      </h2>
-
+    <div className="w-full max-w-[1027px] h-[541px] bg-cinza-escuro rounded-md py-6 px-20 flex flex-col gap-8">
+      <h2 className="text-2xl font-bold">Minha conta</h2>
       <form>
         <div className="flex flex-col gap-8">
-          <div className="relative">
-            <Input
-              id="name"
-              label="Nome"
-              placeholder="Nome completo"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
+          <Input
+            label="Nome"
+            placeholder="Nome completo"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
 
-          <div className="relative">
-            <Input
-              id="email"
-              label="E-mail"
-              type="email"
-              placeholder="email@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
+          <Input
+            label="E-mail"
+            type="email"
+            placeholder="email@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-          <div className="relative md:w-[250px]">
-            <Input
-              id="password"
-              label="Senha"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
+          <Input
+            label="Senha"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-          <Button
-            type="button"
-            onClick={onSubmit}
-            className="sm:w-full md:max-w-[250px] h-[48px]"
-          >
+          <Button className="sm:w-full md:max-w-[250px] h-[48px]">
             Salvar alterações
           </Button>
         </div>
       </form>
-    </section>
+    </div>
   );
 }
