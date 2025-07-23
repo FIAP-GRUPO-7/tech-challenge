@@ -1,4 +1,8 @@
-import TransactionForm from "@/components/TransactionForm";
+import QuickActions from "@/components/home-page/QuickActions";
+import SummaryCards from "@/components/home-page/SummaryCards";
+import ExpensesChart from "@/components/home-page/ExpensesChart";
+import TransactionsList from "@/components/home-page/TransactionsList";
+import BillsToPay from "@/components/home-page/BillsToPay";
 
 export default function PageHome() {
   return (
@@ -11,8 +15,17 @@ export default function PageHome() {
       </h2>
 
       <div className="flex flex-col flex-wrap flex-1 gap-4">
-        <TransactionForm />
+        <QuickActions />
+        <SummaryCards />
+
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+          <ExpensesChart />
+          <TransactionsList />
+        </div>
+
+        <BillsToPay />
       </div>
+
     </section>
   );
 }
