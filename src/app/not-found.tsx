@@ -33,7 +33,7 @@ export default function NotFound() {
 
       <main className="flex flex-col bg-gradiente-azul w-screen h-screen">
         <Header />
-        <section className="flex flex-1 justify-center items-center">
+        <section className="flex flex-1 justify-center items-center mb-8 mt-8">
           <div className="flex flex-col items-center space-y-4 text-center max-w-md">
             <h1 className="text-2xl font-bold">
               Ops! Não encontramos a página...
