@@ -83,7 +83,7 @@ const ModalCartoes: React.FC<ModalCartoesProps> = ({
         </button>
 
         <div className="mt-6 text-center">
-          <p className="text-[var(--color-preto)] text-sm font-medium mb-2">
+          <p className="text-[var(--color-preto)] text-sm font-medium mb-2 texto-dinamico">
             {cartao === "fisico" ? "Cartão físico" : "Cartão digital"}
           </p>
 
@@ -91,7 +91,7 @@ const ModalCartoes: React.FC<ModalCartoesProps> = ({
 
           {tipo === "configurar" && (
             <>
-              <p className="text-[var(--color-preto)] text-base font-bold mb-4">
+              <p className="text-[var(--color-preto)] text-base font-bold mb-4 texto-dinamico">
                 Personalize as funções do seu cartão.
               </p>
 
@@ -110,7 +110,7 @@ const ModalCartoes: React.FC<ModalCartoesProps> = ({
                 ].map(({ chave, label }) => (
                   <label
                     key={chave}
-                    className="flex items-center gap-3 text-sm text-[var(--color-preto)]"
+                    className="flex items-center gap-3 text-sm text-[var(--color-preto)] texto-dinamico" 
                   >
                     <input
                       type="checkbox"
@@ -156,15 +156,15 @@ const ModalCartoes: React.FC<ModalCartoesProps> = ({
 
           {tipo === "bloquear" && (
             <div className="text-center mt-4 flex flex-col items-center">
-              <p className="text-[var(--color-preto)] text-base font-bold mt-2 mb-1">
+              <p className="text-[var(--color-preto)] text-base font-bold mt-2 mb-1 texto-dinamico">
                 Gerencie seu cartão com liberdade.
               </p>
-              <p className="text-[var(--color-preto)] text-base font-bold mb-3">
+              <p className="text-[var(--color-preto)] text-base font-bold mb-3 texto-dinamico">
                 {bloqueado
                   ? "Você pode desbloqueá-lo para voltar a usar."
                   : "Bloqueie temporariamente ou desbloqueie quando quiser."}
               </p>
-              <p className="text-sm text-[var(--color-preto)] mb-10">
+              <p className="text-sm text-[var(--color-preto)] mb-10 texto-dinamico">
                 {bloqueado
                   ? "Clique abaixo para reativar seu cartão."
                   : "Você poderá desbloqueá-lo ou solicitar um novo depois."}
@@ -196,7 +196,7 @@ const ModalCartoes: React.FC<ModalCartoesProps> = ({
                 </button>
               </div>
 
-              <p className="text-xs text-[var(--color-preto)] font-medium">
+              <p className="text-xs text-[var(--color-preto)] font-medium texto-dinamico">
                 {bloqueado
                   ? "O cartão está inativo. Desbloqueie para voltar a usá-lo."
                   : "Atenção: Cartões bloqueados não poderão ser usados para compras até o desbloqueio."}

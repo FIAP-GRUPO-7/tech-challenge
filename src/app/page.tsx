@@ -29,6 +29,7 @@ export default function PageAuth() {
 
   useEffect(() => {
     localStorage.removeItem("user");
+    localStorage.removeItem("darkMode");
   }, [])
 
   return (
