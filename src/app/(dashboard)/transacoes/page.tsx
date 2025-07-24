@@ -1,4 +1,4 @@
-import TransactionTable from "@/components/transacoes/TransactionTable";
+import TransactionTable from "@/components/transactions/TransactionTable";
 
 export default function PageTransacoes() {
   return (

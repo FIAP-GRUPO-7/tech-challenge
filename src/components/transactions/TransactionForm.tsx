@@ -29,7 +29,7 @@ export default function TransactionForm() {
     };
 
     return (
-        <div className="bg-[var(--color-branco)] p-10 rounded-md shadow-md w-full max-w-6xl mx-auto xl:max-w-7xl -mt-4">
+        <div className="w-full bg-[var(--color-branco)] p-6 rounded-md shadow-md">
             <h2 className="text-xl font-semibold text-[var(--color-preto)] mb-6 text-center">
                 Adicionar Transação
             </h2>

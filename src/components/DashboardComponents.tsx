@@ -23,10 +23,12 @@ export function GreetingCard({
 }) {
   const [date, setDate] = useState<string>("");
   const [visibled, setVisibled] = useState<boolean>(false);
+  const [mounted, setMounted] = useState<boolean>(false);
   const balance = useSelector(selectBalance);
   const user = useSelector(selectUser);
 
   useEffect(() => {
+    setMounted(true);
     if (typeof window !== "undefined") {
       const today = new Date();
       const formatted = today.toLocaleDateString("pt-BR", {
@@ -39,7 +41,7 @@ export function GreetingCard({
     }
   }, []);
 
-  if (!show) {
+  if (!mounted || !show) {
     return null;
   }
 
@@ -47,7 +49,9 @@ export function GreetingCard({
     <div className="w-full bg-azul-escuro rounded-md p-6 flex gap-4 flex-col sm:flex-row sm:h-[406px]">
       {user && (
         <div className="flex flex-col gap-6 flex-1">
-          <h2 className="text-2xl text-white">Olá, {user?.name || ""}! :)</h2>
+          <h2 className="text-2xl text-white">
+            Olá, {user?.name || ""}! :)
+          </h2>
           <p className="text-white">{date}</p>
         </div>
       )}
@@ -160,32 +164,29 @@ export function ExtractList({ show }: ExtractListProps) {
             <div
               key={extract.id}
               onClick={() => setSelectedId(extract.id)}
-              className={`cursor-pointer p-2 rounded transition ${
-                selectedId === extract.id
+              className={`cursor-pointer p-2 rounded transition ${selectedId === extract.id
                   ? "bg-gray-100 border border-azul-claro"
                   : ""
-              } flex justify-between items-center flex-wrap-reverse`}
+                } flex justify-between items-center flex-wrap-reverse`}
             >
               <div
-                className={`flex-1 flex flex-col gap-2 border-b-1 pb-2 ${
-                  extract.type.toLowerCase() === "depósito"
+                className={`flex-1 flex flex-col gap-2 border-b-1 pb-2 ${extract.type.toLowerCase() === "depósito"
                     ? "border-sucesso"
                     : "border-erro"
-                }`}
+                  }`}
               >
                 <h4 className="text-label font-semibold text-md">
                   {monthName}
                 </h4>
                 <p className="text-lg">{extract.type}</p>
                 <b
-                  className={`text-lg font-bold ${
-                    extract.value < 0 ? "text-red-600" : ""
-                  }`}
+                  className={`text-lg font-bold ${extract.value < 0 ? "text-red-600" : ""
+                    }`}
                 >
                   {extract.value < 0
                     ? `- R$ ${formatToBRL(Math.abs(extract.value))
-                        .replace("R$", "")
-                        .trim()}`
+                      .replace("R$", "")
+                      .trim()}`
                     : formatToBRL(extract.value)}
                 </b>
               </div>

@@ -41,7 +41,7 @@ export default function TransactionTable() {
     }, [search, filter, page]);
 
     return (
-        <div className="bg-[var(--color-branco)] p-10 rounded-md shadow-md w-full max-w-6xl mx-auto xl:max-w-7xl -mt-4">
+        <div className="w-full bg-[var(--color-branco)] p-6 rounded-md shadow-md">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
                 <h2 className="text-lg font-semibold text-[var(--color-preto)]">
                     Transações
@@ -92,8 +92,8 @@ export default function TransactionTable() {
                                 <td className="px-4 py-2">{t.type}</td>
                                 <td
                                     className={`px-4 py-2 ${t.amount >= 0
-                                            ? "text-[var(--color-sucesso)]"
-                                            : "text-[var(--color-erro)]"
+                                        ? "text-[var(--color-sucesso)]"
+                                        : "text-[var(--color-erro)]"
                                         }`}
                                 >
                                     {t.amount >= 0
