@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, ChangeEvent, FormEvent } from "react";
 import Cadastro from "@/shared/assets/Cadastro.svg";
 import Image from "next/image";
@@ -7,7 +6,6 @@ import Link from "next/link";
 import Cookies from "js-cookie";
 import { login } from "@/lib/api";
 import { useRouter } from "next/navigation";
-
 
 interface LoginModalProps {
   onClose: () => void;
@@ -26,6 +24,7 @@ export default function LoginModal({ onClose }: LoginModalProps) {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -48,8 +47,6 @@ export default function LoginModal({ onClose }: LoginModalProps) {
     return Object.values(newErrors).every((err) => !err);
   };
 
-  const router = useRouter();
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validate()) return;
@@ -65,9 +62,15 @@ export default function LoginModal({ onClose }: LoginModalProps) {
         sameSite: "lax",
       });
 
-      localStorage.setItem("user", JSON.stringify({ email: form.email }));
+      const userData = {
+        name: form.email.split("@")[0],
+        email: form.email,
+      };
+
+      localStorage.setItem("user", JSON.stringify(userData));
 
       alert("Login realizado com sucesso!");
+      onClose();
 
       router.push("/home");
     } catch (err: any) {
@@ -77,7 +80,6 @@ export default function LoginModal({ onClose }: LoginModalProps) {
       setLoading(false);
     }
   };
-
 
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
