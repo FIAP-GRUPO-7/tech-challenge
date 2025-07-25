@@ -19,7 +19,7 @@ const ServicesModal = () => {
 
   return (
     <section className="w-full bg-[var(--color-fundo-principal)] rounded-md p-6">
-      <h3 className="text-[var(--color-preto)] text-lg font-semibold mb-4 texto-dinamico">
+      <h3 className="text-[var(--color-preto)] text-lg font-semibold mb-4 text-dynamic">
         Confira outros serviços disponíveis:
       </h3>
 

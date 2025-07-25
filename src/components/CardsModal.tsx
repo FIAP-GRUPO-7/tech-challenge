@@ -32,7 +32,7 @@ const CardsModal = () => {
 
   return (
     <section className="bg-cinza-escuro p-6 rounded-md w-full">
-      <h2 className="text-xl font-semibold text-[var(--color-preto)] mb-4 texto-dinamico">
+      <h2 className="text-xl font-semibold text-[var(--color-preto)] mb-4 text-dynamic">
         Meus Cartões
       </h2>
 
@@ -50,7 +50,7 @@ const CardsModal = () => {
         </div>
 
         <div className="flex flex-col justify-between mx-auto md:mx-0">
-          <p className="text-[var(--color-preto)] mb-2 texto-dinamico">Cartão Físico</p>
+          <p className="text-[var(--color-preto)] mb-2 text-dynamic">Cartão Físico</p>
 
           <div className="flex flex-col space-y-1 mb-2">
             <button
@@ -76,7 +76,7 @@ const CardsModal = () => {
             </button>
           </div>
 
-          <p className="text-[var(--color-preto)] text-xs texto-dinamico">
+          <p className="text-[var(--color-preto)] text-xs text-dynamic">
             Função: Débito/Crédito
           </p>
         </div>
@@ -96,7 +96,7 @@ const CardsModal = () => {
         </div>
 
         <div className="flex flex-col justify-between mx-auto md:mx-0">
-          <p className="text-[var(--color-preto)] mb-2 texto-dinamico">Cartão Digital</p>
+          <p className="text-[var(--color-preto)] mb-2 text-dynamic">Cartão Digital</p>
 
           <div className="flex flex-col space-y-1 mb-2">
             <button
@@ -122,7 +122,7 @@ const CardsModal = () => {
             </button>
           </div>
 
-          <p className="text-[var(--color-preto)] text-xs texto-dinamico">Função: Débito</p>
+          <p className="text-[var(--color-preto)] text-xs text-dynamic">Função: Débito</p>
         </div>
       </article>
 

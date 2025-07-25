@@ -186,7 +186,7 @@ export function ExtractList({ show }: ExtractListProps) {
                     : "border-erro"
                 }`}
               >
-                <h4 className="text-label font-semibold text-md">
+                <h4 className="text-label font-semibold text-md text-dynamic-dark ">
                   {monthName}
                 </h4>
                 <p className="text-lg">{extract.type}</p>
@@ -202,7 +202,7 @@ export function ExtractList({ show }: ExtractListProps) {
                     : formatToBRL(extract.value)}
                 </b>
               </div>
-              <span className="text-label">{extract.date}</span>
+              <span className="text-label text-dynamic-dark">{extract.date}</span>
             </div>
           );
         })}

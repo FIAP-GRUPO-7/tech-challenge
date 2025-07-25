@@ -53,8 +53,12 @@
   --color-label: #E5E5E5;
 }
 
-.dark .texto-dinamico {
+.dark .text-dynamic {
   color: var(--color-branco);
+}
+
+.dark .text-dynamic-dark {
+  color: var(--color-preto);
 }
 
 .bg-gradiente-azul {
