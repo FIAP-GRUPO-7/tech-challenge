@@ -58,16 +58,19 @@ export default function LoginModal({ onClose }: LoginModalProps) {
       const result = await login(form.email, form.password);
 
       Cookies.set("token", result.token, {
-        secure: true,
-        sameSite: "lax",
-      });
+      path: "/",           // garante que estará disponível para todas as rotas
+      sameSite: "lax",     // compatível com middlewares
+      secure: false,       // em localhost não usar true
+      expires: 7           // dias de expiração
+    });
 
-      const userData = {
-        name: form.email.split("@")[0],
-        email: form.email,
-      };
-
-      localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          name: result.name || form.email.split("@")[0],
+          email: result.email || form.email,
+        })
+      );
 
       alert("Login realizado com sucesso!");
       onClose();
