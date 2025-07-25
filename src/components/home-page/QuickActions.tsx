@@ -1,3 +1,4 @@
+"use client";
 import {
   DollarSign,
   Repeat,
@@ -6,6 +7,7 @@ import {
   FileText,
   Shield,
 } from "lucide-react";
+import { Tooltip } from "react-tooltip";
 
 export default function QuickActions() {
   const actions = [
@@ -23,6 +25,10 @@ export default function QuickActions() {
         <div
           key={index}
           className="flex flex-col items-center hover:scale-110 transition-transform duration-200 ease-in-out"
+          data-tooltip-id="tooltip"
+          data-tooltip-content={`Clique para acessar ${action.label}`}
+          data-tooltip-place="bottom"
+          aria-label={`Clique para acessar ${action.label}`}
         >
           <div className="bg-gradient-to-br from-[var(--color-branco)] to-[var(--color-azul-claro)] p-4 rounded-full shadow-lg hover:shadow-xl transition">
             {action.icon}
@@ -32,6 +38,7 @@ export default function QuickActions() {
           </span>
         </div>
       ))}
+      <Tooltip id="tooltip" />
     </div>
   );
 }
