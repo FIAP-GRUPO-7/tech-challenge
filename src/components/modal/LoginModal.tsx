@@ -58,10 +58,10 @@ export default function LoginModal({ onClose }: LoginModalProps) {
       const result = await login(form.email, form.password);
 
       Cookies.set("token", result.token, {
-      path: "/",           // garante que estará disponível para todas as rotas
-      sameSite: "lax",     // compatível com middlewares
+      path: "/",           
+      sameSite: "lax",     
       secure: false,       // em localhost não usar true
-      expires: 7           // dias de expiração
+      expires: 7          
     });
 
       localStorage.setItem(
