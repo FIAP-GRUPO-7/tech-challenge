@@ -1,4 +1,6 @@
+import { ThemeContext } from "@/context/ThemeContext";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { useContext } from "react";
 
 export interface User {
   id: string;

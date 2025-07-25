@@ -4,6 +4,7 @@ import { Button } from "@/components/_button";
 import { Input } from "@/components/_input";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser, updateUser } from "@/features/auth";
+import { Tooltip } from "react-tooltip";
 
 export default function PageAccount() {
   const [name, setName] = useState("");
@@ -11,6 +12,11 @@ export default function PageAccount() {
   const [password, setPassword] = useState("");
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
 
   useEffect(() => {
     if (user) {
@@ -25,7 +31,24 @@ export default function PageAccount() {
   }, [user]);
 
   const onSubmit = () => {
+    if (!validate()) return;
     dispatch(updateUser({ name, email, password }));
+  };
+
+  const validate = () => {
+    const newErrors = {
+      name: !name
+        ? "Nome é obrigatório."
+        : "",
+      email: !email
+        ? "Email é obrigatório."
+        : !email.includes("@")
+        ? "Email não é válido."
+        : "",
+      password: !password ? "Senha é obrigatória." : "",
+    };
+    setErrors(newErrors);
+    return Object.values(newErrors).every((err) => !err);
   };
 
   return (
@@ -46,7 +69,12 @@ export default function PageAccount() {
               placeholder="Nome completo"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              className={`rounded-md border border-cinza-claro focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white ${errors.name ? "border-erro" : "border-cinza-claro"} `}
+              aria-label="Digite seu nome completo"
             />
+            {errors.name && (
+              <p className="text-erro text-xs mt-1">{errors.name}</p>
+            )}
           </div>
 
           <div className="relative">
@@ -57,7 +85,12 @@ export default function PageAccount() {
               placeholder="email@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className={`rounded-md border border-cinza-claro focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white ${errors.email ? "border-erro" : "border-cinza-claro"} `}
+              aria-label="Digite seu e-mail"
             />
+            {errors.email && (
+              <p className="text-erro text-xs mt-1">{errors.email}</p>
+            )}
           </div>
 
           <div className="relative md:w-[250px]">
@@ -67,17 +100,27 @@ export default function PageAccount() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              className={`rounded-md border border-cinza-claro focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white ${errors.password ? "border-erro" : "border-cinza-claro"} `}
+              aria-label="Digite sua senha"
             />
+            {errors.password && (
+              <p className="text-erro text-xs mt-1">{errors.password}</p>
+            )}
           </div>
 
           <Button
             type="button"
             onClick={onSubmit}
             className="sm:w-full md:max-w-[250px] h-[48px]"
+            data-tooltip-id="button"
+            data-tooltip-content="Clique para salvar as alterações"
+            data-tooltip-place="top"
+            aria-label="Clique para salvar as alterações"
           >
             Salvar alterações
           </Button>
         </div>
+        <Tooltip id="button" />
       </form>
     </section>
   );

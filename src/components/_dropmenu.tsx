@@ -3,10 +3,12 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useMemo, useContext } from "react";
 import { IoMdClose } from "react-icons/io";
 import { useDispatch } from "react-redux";
 import { logout } from "@/features/auth";
+import ThemeToggle from "./ThemeToggle";
+import { ThemeContext } from "@/context/ThemeContext";
 
 interface DropdownMenuProps {
   children: React.ReactNode;
@@ -15,6 +17,7 @@ interface DropdownMenuProps {
 enum ActionTypeEnum {
   NAVIGATE = "NAVIGATE",
   ACTION = "ACTION",
+  CUSTOM = "CUSTOM",
 }
 
 type ActionTypeValueNavigate = string;
@@ -25,6 +28,7 @@ export const DropdownMenu = ({ children }: DropdownMenuProps) => {
   const menuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const dispatch = useDispatch();
+  const { setLightTheme } = useContext(ThemeContext);
 
   // Fecha o menu ao clicar fora
   useEffect(() => {
@@ -62,10 +66,19 @@ export const DropdownMenu = ({ children }: DropdownMenuProps) => {
       },
       {
         id: crypto.randomUUID(),
+        label: "ThemeToggle",
+        action: {
+          type: "CUSTOM",
+          value: null,
+        },
+      },
+      {
+        id: crypto.randomUUID(),
         label: "Sair",
         action: {
           type: ActionTypeEnum.ACTION,
           value: () => {
+            setLightTheme();
             dispatch(logout());
           },
         },
@@ -92,6 +105,13 @@ export const DropdownMenu = ({ children }: DropdownMenuProps) => {
           </div>
           <ul className="px-8" role="menu" aria-orientation="vertical">
             {options.map((option, index) => {
+              if (option.action.type === ActionTypeEnum.CUSTOM) {
+                return (
+                  <li key={option.id} className="flex justify-center pt-4 border-b-1 border-white">
+                    <ThemeToggle />
+                  </li>
+                );
+              }
               if (option.action.type === ActionTypeEnum.ACTION) {
                 return (
                   <button
@@ -101,12 +121,12 @@ export const DropdownMenu = ({ children }: DropdownMenuProps) => {
                       "text-center w-full pb-4 cursor-pointer",
                       index > 0 && "pt-4"
                     )}
+                    aria-label={`Clique para ${option.label.toLowerCase()}`}
                   >
                     <li className="">{option.label}</li>
                   </button>
                 );
               }
-
               return (
                 <li key={option.id}>
                   <Link

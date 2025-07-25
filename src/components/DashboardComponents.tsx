@@ -13,6 +13,7 @@ import {
   selectTransactions,
 } from "@/features/transactions";
 import { selectUser } from "@/features/auth";
+import { Tooltip } from "react-tooltip";
 
 export function GreetingCard({
   children,
@@ -57,7 +58,10 @@ export function GreetingCard({
             <div className="border-white border-b-2 py-4">
               <h3 className="text-xl text-white flex items-center gap-6">
                 <span>Saldo</span>
-                <button onClick={() => setVisibled((prev) => !prev)}>
+                <button onClick={() => setVisibled((prev) => !prev)}
+                  data-tooltip-id="button"
+                  aria-label={`Clique para ${visibled ? "ocultar saldo" : "mostrar saldo"}`} 
+                  data-tooltip-content={`Clique para ${visibled ? "ocultar saldo" : "mostrar saldo"}`}                  data-tooltip-place="bottom">
                   {visibled ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </h3>
@@ -72,6 +76,7 @@ export function GreetingCard({
         </div>
       )}
       <div className="gap-8">{children}</div>
+      <Tooltip id="button" />
     </div>
   );
 }
@@ -125,6 +130,10 @@ export function ExtractList({ show }: ExtractListProps) {
         <h4 className="text-2xl font-bold">Extrato</h4>
         <div className="flex gap-2">
           <RoundedButton
+            aria-label="Clique para editar transação"
+            data-tooltip-id="button"
+            data-tooltip-content="Clique para editar transação"
+            data-tooltip-place="bottom"
             onClick={() => {
               const item = transactions.find((e) => e.id === selectedId);
               if (item) handleEdit(item.id, item.value);
@@ -134,6 +143,10 @@ export function ExtractList({ show }: ExtractListProps) {
             <HiPencil color="white" size={25} />
           </RoundedButton>
           <RoundedButton
+            aria-label="Clique para excluir transação"
+            data-tooltip-id="button"
+            data-tooltip-content="Clique para excluir transação"
+            data-tooltip-place="bottom"
             onClick={() => {
               if (selectedId) handleDelete(selectedId);
               else alert("Selecione uma transação para excluir.");
@@ -173,7 +186,7 @@ export function ExtractList({ show }: ExtractListProps) {
                     : "border-erro"
                 }`}
               >
-                <h4 className="text-label font-semibold text-md">
+                <h4 className="text-label font-semibold text-md text-dynamic-dark ">
                   {monthName}
                 </h4>
                 <p className="text-lg">{extract.type}</p>
@@ -189,7 +202,7 @@ export function ExtractList({ show }: ExtractListProps) {
                     : formatToBRL(extract.value)}
                 </b>
               </div>
-              <span className="text-label">{extract.date}</span>
+              <span className="text-label text-dynamic-dark">{extract.date}</span>
             </div>
           );
         })}
