@@ -69,9 +69,14 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
 
       alert("✅ Usuário cadastrado com sucesso!");
       onClose();
-    } catch (err: any) {
-      console.error(err);
-      setError(err.message || "❌ Erro ao registrar usuário.");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        setError(err.message || "❌ Erro ao registrar usuário.");
+      } else {
+        console.error(err);
+        setError("❌ Erro ao registrar usuário.");
+      }
     } finally {
       setLoading(false);
     }
@@ -110,9 +115,7 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
                 errors.username ? "border-erro" : "border-cinza-claro"
               }`}
             />
-            {errors.username && (
-              <p className="text-erro text-xs mt-1">{errors.username}</p>
-            )}
+            {errors.username && <p className="text-erro text-xs mt-1">{errors.username}</p>}
           </div>
 
           <div>
@@ -130,9 +133,7 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
                 errors.email ? "border-erro" : "border-cinza-claro"
               }`}
             />
-            {errors.email && (
-              <p className="text-erro text-xs mt-1">{errors.email}</p>
-            )}
+            {errors.email && <p className="text-erro text-xs mt-1">{errors.email}</p>}
           </div>
 
           <div>
@@ -150,9 +151,7 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
                 errors.password ? "border-erro" : "border-cinza-claro"
               }`}
             />
-            {errors.password && (
-              <p className="text-erro text-xs mt-1">{errors.password}</p>
-            )}
+            {errors.password && <p className="text-erro text-xs mt-1">{errors.password}</p>}
           </div>
 
           <div className="flex items-start text-sm">
@@ -169,9 +168,7 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
               conforme descrito na Política de Privacidade do banco.
             </label>
           </div>
-          {errors.terms && (
-            <p className="text-erro text-xs mt-1">{errors.terms}</p>
-          )}
+          {errors.terms && <p className="text-erro text-xs mt-1">{errors.terms}</p>}
 
           {error && <p className="text-erro text-xs mt-1">{error}</p>}
 

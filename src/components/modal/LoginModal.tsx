@@ -3,15 +3,19 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import Cadastro from "@/shared/assets/Cadastro.svg";
 import Image from "next/image";
 import Link from "next/link";
-import Cookies from "js-cookie";
-import { login } from "@/lib/api";
 import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { login, selectLoading } from "@/features/auth";
+import type { AppDispatch } from "@/store";
 
 interface LoginModalProps {
   onClose: () => void;
 }
 
 export default function LoginModal({ onClose }: LoginModalProps) {
+  const dispatch = useDispatch<AppDispatch>();
+  const loading = useSelector(selectLoading);
+
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -22,7 +26,6 @@ export default function LoginModal({ onClose }: LoginModalProps) {
     password: "",
   });
 
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
 
@@ -51,36 +54,22 @@ export default function LoginModal({ onClose }: LoginModalProps) {
     e.preventDefault();
     if (!validate()) return;
 
-    setLoading(true);
     setError("");
 
     try {
-      const result = await login(form.email, form.password);
-
-      Cookies.set("token", result.token, {
-      path: "/",           
-      sameSite: "lax",     
-      secure: false,       // em localhost não usar true
-      expires: 7          
-    });
-
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          name: result.name || form.email.split("@")[0],
-          email: result.email || form.email,
-        })
-      );
+      await dispatch(login({ email: form.email, password: form.password })).unwrap();
 
       alert("Login realizado com sucesso!");
       onClose();
-
       router.push("/home");
-    } catch (err: any) {
-      console.error(err);
-      setError(err.message || "Erro ao autenticar.");
-    } finally {
-      setLoading(false);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        setError(err.message || "Erro ao autenticar.");
+      } else {
+        console.error(err);
+        setError("Erro ao autenticar.");
+      }
     }
   };
 
@@ -95,12 +84,7 @@ export default function LoginModal({ onClose }: LoginModalProps) {
         </button>
 
         <div className="text-center mb-4">
-          <Image
-            src={Cadastro}
-            alt={"Cadastro"}
-            height={140}
-            className="mx-auto"
-          />
+          <Image src={Cadastro} alt={"Cadastro"} height={140} className="mx-auto" />
           <h2 className="font-bold pt-4 text-base">Login</h2>
         </div>
 
@@ -120,9 +104,7 @@ export default function LoginModal({ onClose }: LoginModalProps) {
                 errors.email ? "border-erro" : "border-cinza-claro"
               }`}
             />
-            {errors.email && (
-              <p className="text-erro text-xs mt-1">{errors.email}</p>
-            )}
+            {errors.email && <p className="text-erro text-xs mt-1">{errors.email}</p>}
           </div>
 
           <div>
@@ -140,9 +122,7 @@ export default function LoginModal({ onClose }: LoginModalProps) {
                 errors.password ? "border-erro" : "border-cinza-claro"
               }`}
             />
-            {errors.password && (
-              <p className="text-erro text-xs mt-1">{errors.password}</p>
-            )}
+            {errors.password && <p className="text-erro text-xs mt-1">{errors.password}</p>}
           </div>
 
           <Link href="" className="text-xs text-sucesso">

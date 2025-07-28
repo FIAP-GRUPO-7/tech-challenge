@@ -36,7 +36,6 @@ export async function login(email: string, password: string) {
   }
 
   const data = await res.json();
-  // ✅ Retorna apenas o objeto interno { token, name, email }
   return data.result;
 }
 

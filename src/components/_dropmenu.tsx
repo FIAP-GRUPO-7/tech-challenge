@@ -71,7 +71,7 @@ export const DropdownMenu = ({ children }: DropdownMenuProps) => {
         },
       },
     ],
-    []
+    [dispatch]
   );
 
   return (

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { Button } from "@/components/_button";
 import { Input } from "@/components/_input";
-import { getUserData } from "@/lib/api";
+import { fetchUser } from "@/lib/api"; // ✅ import corrigido
 
 export default function PageAccount() {
   const [name, setName] = useState("");
@@ -12,14 +12,14 @@ export default function PageAccount() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchUser() {
+    async function fetchUserData() {
       try {
         const token = Cookies.get("token");
         if (!token) {
           console.error("Usuário não autenticado");
           return;
         }
-        const user = await getUserData(token);
+        const user = await fetchUser(token); // ✅ chamada corrigida
         setName(user.name);
         setEmail(user.email);
       } catch (e) {
@@ -28,7 +28,7 @@ export default function PageAccount() {
         setLoading(false);
       }
     }
-    fetchUser();
+    fetchUserData();
   }, []);
 
   if (loading) return <p>Carregando dados...</p>;

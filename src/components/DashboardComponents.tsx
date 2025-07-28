@@ -19,7 +19,7 @@ export function GreetingCard({
   show,
 }: {
   children?: React.ReactNode;
-  show: boolean;
+  show?: boolean;
 }) {
   const [date, setDate] = useState<string | null>(null);
   const [visibled, setVisibled] = useState<boolean>(false);
@@ -37,7 +37,7 @@ export function GreetingCard({
     setDate(formatted);
   }, []);
 
-  if (!show) {
+  if (show === false) {
     return null;
   }
 
