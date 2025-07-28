@@ -37,12 +37,10 @@ export const Footer = () => {
       {/* Marca */}
       <div className="space-y-5 py-3 sm:py-0 w-50 text-center sm:text-left">
         <h2 className="font-bold text-base">Desenvolvido por Alura</h2>
-        <Image src={Logo} alt="Logo da Bytebank" height={20} />
-        <Image
-          src={Icons}
-          alt="Ícones das redes sociais Bytebank"
-          height={20}
-        />
+         <div className="flex items-center justify-center sm:justify-start gap-4">
+          <Image src={Logo} alt="Logo da Bytebank" height={20} />
+          <Image src={Icons} alt="Ícones das redes sociais Bytebank" height={20} />
+        </div>
       </div>
     </footer>
   );

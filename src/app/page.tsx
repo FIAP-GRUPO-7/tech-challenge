@@ -26,7 +26,11 @@ export default function PageAuth() {
     );
   }
 
-   return (
+  useEffect(() => {
+    localStorage.removeItem("darkMode");
+  }, [])
+
+  return (
     <main className="flex flex-col bg-gradiente-azul w-full h-auto lg:h-screen">
       <Header />
 

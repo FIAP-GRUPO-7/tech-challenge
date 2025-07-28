@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { login, selectLoading } from "@/features/auth";
 import type { AppDispatch } from "@/store";
+import { Tooltip } from 'react-tooltip'
 
 interface LoginModalProps {
   onClose: () => void;
@@ -79,6 +80,10 @@ export default function LoginModal({ onClose }: LoginModalProps) {
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-xl"
+          data-tooltip-id="button"
+          data-tooltip-content="Clique para fechar o modal"
+          data-tooltip-place="bottom"
+          aria-label="Clique para fechar o modal"
         >
           ×
         </button>
@@ -103,6 +108,7 @@ export default function LoginModal({ onClose }: LoginModalProps) {
               className={`mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white ${
                 errors.email ? "border-erro" : "border-cinza-claro"
               }`}
+              aria-label="Digite seu email"
             />
             {errors.email && <p className="text-erro text-xs mt-1">{errors.email}</p>}
           </div>
@@ -121,6 +127,7 @@ export default function LoginModal({ onClose }: LoginModalProps) {
               className={`mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white ${
                 errors.password ? "border-erro" : "border-cinza-claro"
               }`}
+              aria-label="Digite sua senha"
             />
             {errors.password && <p className="text-erro text-xs mt-1">{errors.password}</p>}
           </div>
@@ -135,10 +142,15 @@ export default function LoginModal({ onClose }: LoginModalProps) {
               type="submit"
               disabled={loading}
               className="px-4 py-2 rounded font-bold text-branco bg-azul-claro cursor-pointer"
+              data-tooltip-id="button"
+              data-tooltip-content="Clique para acessar a página inicial"
+              data-tooltip-place="top"
+              aria-label="Clique para acessar a página inicial"
             >
               {loading ? "Carregando..." : "Acessar"}
             </button>
           </div>
+          <Tooltip id="button" />
         </form>
       </div>
     </div>

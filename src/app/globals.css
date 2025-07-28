@@ -30,6 +30,37 @@
   
 }
 
+.dark {
+  --color-azul-escuro: #001A33;
+  --color-azul-claro: #4D8FFF;
+  --color-gradiente-azul-claro-inicio: #1A1A1A;
+  --color-gradiente-azul-claro-fim: #4D8FFF;
+  --color-fundo-principal: #1E1E2E;
+
+  --color-azul-grafico: #3B82F6;
+  --color-roxo-grafico: #A855F7;
+  --color-magenta-grafico: #EC4899;
+
+  --color-branco: #F5F5F5;
+  --color-preto: #111111;
+  --color-cinza-claro: #2E2E2E;
+  --color-cinza-escuro: #444444;
+
+  --color-erro: #F87171;
+  --color-sucesso: #4ADE80;
+
+  --color-text-field-light: #999999;
+  --color-label: #E5E5E5;
+}
+
+.dark .text-dynamic {
+  color: var(--color-branco);
+}
+
+.dark .text-dynamic-dark {
+  color: var(--color-preto);
+}
+
 .bg-gradiente-azul {
   background: linear-gradient(var(--color-gradiente-azul-claro-inicio), var(--color-gradiente-azul-claro-fim));
 }
