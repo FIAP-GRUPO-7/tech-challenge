@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { Button } from "@/components/_button";
 import { Input } from "@/components/_input";
-import { fetchUser } from "@/lib/api"; // ✅ import corrigido
+import { fetchUser } from "@/lib/api";
 
 export default function PageAccount() {
   const [name, setName] = useState("");
@@ -19,7 +19,7 @@ export default function PageAccount() {
           console.error("Usuário não autenticado");
           return;
         }
-        const user = await fetchUser(token); // ✅ chamada corrigida
+        const user = await fetchUser(token); 
         setName(user.name);
         setEmail(user.email);
       } catch (e) {
