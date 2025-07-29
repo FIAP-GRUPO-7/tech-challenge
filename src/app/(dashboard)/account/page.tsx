@@ -5,6 +5,8 @@ import { Input } from "@/components/_input";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser, updateUser } from "@/features/auth";
 import { Tooltip } from "react-tooltip";
+import Cookies from "js-cookie";
+import { fetchUser } from "@/lib/api";
 
 export default function PageAccount() {
   const [name, setName] = useState("");
@@ -17,18 +19,30 @@ export default function PageAccount() {
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
-    if (user) {
+    async function fetchUserData() {
       try {
-        setName(user.name || "");
-        setEmail(user.email || "");
-        setPassword(user.password || "");
+        const token = Cookies.get("token");
+        if (!token) {
+          console.error("Usuário não autenticado");
+          return;
+        }
+        const user = await fetchUser(token); 
+        setName(user.name);
+        setEmail(user.email);
       } catch (e) {
-        console.error("Erro ao recuperar dados:", e);
+        console.error("Erro ao buscar dados do usuário:", e);
+      } finally {
+        setLoading(false);
       }
     }
-  }, [user]);
+  fetchUserData();
+  }, []);
+
+  if (loading) return <p>Carregando dados...</p>;
 
   const onSubmit = () => {
     if (!validate()) return;
@@ -52,13 +66,8 @@ export default function PageAccount() {
   };
 
   return (
-    <section
-      aria-labelledby="page-account-title"
-      className="w-full max-w-[1027px] h-[541px] bg-cinza-escuro rounded-md py-6 px-20 flex flex-col gap-8"
-    >
-      <h2 id="page-account-title" className="text-2xl font-bold">
-        Minha conta
-      </h2>
+    <div className="w-full max-w-[1027px] h-[541px] bg-cinza-escuro rounded-md py-6 px-20 flex flex-col gap-8">
+      <h2 className="text-2xl font-bold">Minha conta</h2>
 
       <form>
         <div className="flex flex-col gap-8">
@@ -122,6 +131,6 @@ export default function PageAccount() {
         </div>
         <Tooltip id="button" />
       </form>
-    </section>
+    </div>
   );
 }

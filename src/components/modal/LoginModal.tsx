@@ -1,13 +1,13 @@
 "use client";
-
 import { useState, ChangeEvent, FormEvent } from "react";
 import Cadastro from "@/shared/assets/Cadastro.svg";
 import Image from "next/image";
 import Link from "next/link";
-import { login } from "@/features/auth";
+import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { AppState, AppDispatch } from "@/store";
-import { Tooltip } from 'react-tooltip'
+import { Tooltip } from 'react-tooltip';
+import { login, selectLoading } from "@/features/auth";
+import type { AppDispatch } from "@/store";
 
 interface LoginModalProps {
   onClose: () => void;
@@ -15,8 +15,7 @@ interface LoginModalProps {
 
 export default function LoginModal({ onClose }: LoginModalProps) {
   const dispatch = useDispatch<AppDispatch>();
-  const auth = useSelector((state: AppState) => state.auth);
-  const { error, loading } = auth;
+  const loading = useSelector(selectLoading);
 
   const [form, setForm] = useState({
     email: "",
@@ -27,6 +26,9 @@ export default function LoginModal({ onClose }: LoginModalProps) {
     email: "",
     password: "",
   });
+
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -53,10 +55,22 @@ export default function LoginModal({ onClose }: LoginModalProps) {
     e.preventDefault();
     if (!validate()) return;
 
+    setError("");
+
     try {
-      dispatch(login({ email: form.email, password: form.password }));
-    } catch (err) {
-      console.error(err);
+      await dispatch(login({ email: form.email, password: form.password })).unwrap();
+
+      alert("Login realizado com sucesso!");
+      onClose();
+      router.push("/home");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        setError(err.message || "Erro ao autenticar.");
+      } else {
+        console.error(err);
+        setError("Erro ao autenticar.");
+      }
     }
   };
 
@@ -135,13 +149,14 @@ export default function LoginModal({ onClose }: LoginModalProps) {
           <div className="flex justify-center mt-8">
             <button
               type="submit"
+              disabled={loading}
               className="px-4 py-2 rounded font-bold text-branco bg-azul-claro cursor-pointer"
               data-tooltip-id="button"
               data-tooltip-content="Clique para acessar a página inicial"
               data-tooltip-place="top"
               aria-label="Clique para acessar a página inicial"
             >
-              {loading ? "carregando..." : "Acessar"}
+              {loading ? "Carregando.." : "Acessar"}
             </button>
           </div>
           <Tooltip id="button" />

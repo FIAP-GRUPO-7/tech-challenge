@@ -2,31 +2,31 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import Login from "@/shared/assets/Login.svg";
 import Image from "next/image";
-import { register } from "@/features/auth";
-import { useDispatch } from "react-redux";
 import { Tooltip } from "react-tooltip";
+import { registerUser } from "@/lib/api";
 
 interface RegisterModalProps {
-  onClose: () => void;
+  onClose: () => void; 
 }
 
 export default function RegisterModal({ onClose }: RegisterModalProps) {
   const [form, setForm] = useState({
-    name: "",
+    username:"",
     email: "",
     password: "",
     terms: false,
   });
 
   const [errors, setErrors] = useState({
-    name: "",
+    username:"",
     email: "",
     password: "",
     terms: "",
   });
 
-  const dispatch = useDispatch();
-
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setForm((prev) => ({
@@ -41,7 +41,7 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
 
   const validate = () => {
     const newErrors = {
-      name: form.name ? "" : "Nome é obrigatório.",
+      username: form.username ? "" : "Nome é obrigatório.",
       email: !form.email
         ? "Email é obrigatório."
         : !form.email.includes("@")
@@ -54,24 +54,33 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
     return Object.values(newErrors).every((err) => !err);
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validate()) return;
 
     const id = crypto.randomUUID();
-
-    dispatch(
-      register({
-        id,
-        name: form.name,
+    setLoading(true);
+    setError("");
+    try {
+      await registerUser({
+        username: form.username,
         email: form.email,
         password: form.password,
-        terms: form.terms,
-      })
-    );
+      });
 
-    onClose();
-    alert("Usuário cadastrado com sucesso!");
+      alert("✅ Usuário cadastrado com sucesso!");
+      onClose();
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        setError(err.message || "❌ Erro ao registrar usuário.");
+      } else {
+        console.error(err);
+        setError("❌ Erro ao registrar usuário.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -97,23 +106,21 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
 
         <form onSubmit={handleSubmit} className="space-y-4 px-6">
           <div>
-            <label htmlFor="name" className="block text-sm font-bold">
+            <label htmlFor="username" className="block text-sm font-bold">
               Nome
             </label>
             <input
-              id="name"
-              name="name"
+              id="username"
+              name="username"
               type="text"
               placeholder="Digite seu nome"
-              value={form.name}
+              value={form.username}
               onChange={handleChange}
               className={`mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white ${
-                errors.name ? "border-erro" : "border-cinza-claro"
+                errors.username ? "border-erro" : "border-cinza-claro"
               }`}
             />
-            {errors.name && (
-              <p className="text-erro text-xs mt-1">{errors.name}</p>
-            )}
+            {errors.username && <p className="text-erro text-xs mt-1">{errors.username}</p>}
           </div>
 
           <div>
@@ -132,9 +139,7 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
               }`}
               aria-label="Digite seu email"
             />
-            {errors.email && (
-              <p className="text-erro text-xs mt-1">{errors.email}</p>
-            )}
+            {errors.email && <p className="text-erro text-xs mt-1">{errors.email}</p>}
           </div>
 
           <div>
@@ -153,9 +158,7 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
               }`}
               aria-label="Digite sua senha"
             />
-            {errors.password && (
-              <p className="text-erro text-xs mt-1">{errors.password}</p>
-            )}
+            {errors.password && <p className="text-erro text-xs mt-1">{errors.password}</p>}
           </div>
 
           <div className="flex items-start text-sm">
@@ -188,13 +191,14 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
               conforme descrito na Política de Privacidade do banco.
             </label>
           </div>
-          {errors.terms && (
-            <p className="text-erro text-xs mt-1">{errors.terms}</p>
-          )}
+          {errors.terms && <p className="text-erro text-xs mt-1">{errors.terms}</p>}
+
+          {error && <p className="text-erro text-xs mt-1">{error}</p>}
 
           <div className="flex justify-center mt-8">
             <button
               type="submit"
+              disabled={loading}
               className="px-4 py-2 rounded font-bold text-branco bg-azul-claro"
               data-tooltip-id="button"
               data-tooltip-content="Clique para criar sua conta"
@@ -202,6 +206,7 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
               aria-label="Clique para criar sua conta"
             >
               Criar conta
+              {loading ? "Carregando..." : "Criar conta"}
             </button>
           </div>
           <Tooltip id="button" />
