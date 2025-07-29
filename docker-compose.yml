@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  frontend:
+    build: .
+    container_name: tech-frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: https://tech-backend-25px.onrender.com
+    networks:
+      - tech-network
+
+networks:
+  tech-network:
+    driver: bridge

@@ -22,22 +22,20 @@ export function GreetingCard({
   children?: React.ReactNode;
   show: boolean;
 }) {
-  const [date, setDate] = useState<string>("");
+  const [date, setDate] = useState<string | null>(null);
   const [visibled, setVisibled] = useState<boolean>(false);
   const balance = useSelector(selectBalance);
   const user = useSelector(selectUser);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const today = new Date();
-      const formatted = today.toLocaleDateString("pt-BR", {
-        weekday: "long",
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      });
-      setDate(formatted);
-    }
+    const today = new Date();
+    const formatted = today.toLocaleDateString("pt-BR", {
+      weekday: "long",
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+    setDate(formatted);
   }, []);
 
   if (!show) {
@@ -49,7 +47,11 @@ export function GreetingCard({
       {user && (
         <div className="flex flex-col gap-6 flex-1">
           <h2 className="text-2xl text-white">Olá, {user?.name || ""}! :)</h2>
-          <p className="text-white">{date}</p>
+          {date && (
+            <p className="text-white" suppressHydrationWarning>
+              {date}
+            </p>
+          )}
         </div>
       )}
       {user && (

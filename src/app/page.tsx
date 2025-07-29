@@ -18,6 +18,10 @@ export default function PageAuth() {
   const loading = useSelector(selectLoading);
   const router = useRouter();
 
+  useEffect(() => {
+    localStorage.removeItem("darkMode");
+  }, [])
+
   if (!loading && user) {
     router.replace("/home");
     return (
@@ -26,11 +30,6 @@ export default function PageAuth() {
       </div>
     );
   }
-
-  useEffect(() => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("darkMode");
-  }, [])
 
   return (
     <main className="flex flex-col bg-gradiente-azul w-full h-auto lg:h-screen">
