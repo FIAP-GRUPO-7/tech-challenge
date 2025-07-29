@@ -1,7 +1,5 @@
-import { ThemeContext } from "@/context/ThemeContext";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
-import { useContext } from "react";
 
 export interface User {
   id: string;

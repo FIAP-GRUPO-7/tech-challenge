@@ -5,12 +5,15 @@ import { Button } from "@/components/_button";
 import { Input } from "@/components/_input";
 import { fetchUser } from "@/lib/api";
 import { Tooltip } from "react-tooltip";
+import { useDispatch } from "react-redux";
+import { updateUser } from "@/features/auth";
 
 export default function PageAccount() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
   const [errors, setErrors] = useState({
     name: "",
     email: "",
