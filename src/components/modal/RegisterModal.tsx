@@ -58,7 +58,6 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
     e.preventDefault();
     if (!validate()) return;
 
-    const id = crypto.randomUUID();
     setLoading(true);
     setError("");
     try {

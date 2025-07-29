@@ -2,8 +2,8 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/_button";
 import { Input } from "@/components/_input";
-import { useDispatch, useSelector } from "react-redux";
-import { selectUser, updateUser } from "@/features/auth";
+import { useDispatch } from "react-redux";
+import { updateUser } from "@/features/auth";
 import { Tooltip } from "react-tooltip";
 import Cookies from "js-cookie";
 import { fetchUser } from "@/lib/api";
@@ -12,7 +12,6 @@ export default function PageAccount() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const user = useSelector(selectUser);
   const dispatch = useDispatch();
   const [errors, setErrors] = useState({
     name: "",
