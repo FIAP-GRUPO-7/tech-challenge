@@ -30,7 +30,7 @@ export const login = createAsyncThunk<
   { rejectValue: string }
 >("auth/login", async ({ email, password }, { rejectWithValue }) => {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/auth`, {
+    const res: Response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/auth`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -40,11 +40,20 @@ export const login = createAsyncThunk<
       return rejectWithValue("E-mail ou senha inválidos.");
     }
 
-    const data = await res.json();
-    const token = data?.result?.token;
+    const data: {
+      result?: {
+        token?: string;
+        name?: string;
+        email?: string;
+      };
+    } = await res.json();
 
-    if (!token) {
-      return rejectWithValue("Token não retornado pela API.");
+    const token = data?.result?.token;
+    const name = data?.result?.name;
+    const userEmail = data?.result?.email;
+
+    if (!token || !name || !userEmail) {
+      return rejectWithValue("Token ou usuário não retornado pela API.");
     }
 
     Cookies.set("token", token, { secure: true });
@@ -54,8 +63,8 @@ export const login = createAsyncThunk<
 
     const user: User = {
       id: "",
-      name: email.split("@")[0],
-      email,
+      name,
+      email: userEmail,
       password,
       terms: true,
     };
