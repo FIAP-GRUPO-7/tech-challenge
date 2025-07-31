@@ -17,9 +17,7 @@ interface UserData {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   user: any | null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  users: any[] | null; 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  transactions: any[] | null;
+  token: any | null; 
 }
 
 // --- Função de Utilitário para Obter Dados do LocalStorage para URL ---
@@ -32,17 +30,15 @@ function getMicrofrontendDataForUrl(): string {
   if (typeof window === 'undefined') {
     // Retorna uma string JSON vazia e codificada se estiver no servidor
     console.warn("localStorage não disponível: getMicrofrontendDataForUrl tentou rodar no servidor.");
-    return encodeURIComponent(JSON.stringify({ user: null, users: [], transactions: [] }));
+    return encodeURIComponent(JSON.stringify({ user: null, token: null, }));
   }
 
   const dataUser = localStorage.getItem('user');
-  const dataUsers = localStorage.getItem('users');
-  const dataTransactions = localStorage.getItem('transactions');
+  const token = localStorage.getItem('token');
 
   const dataToTransfer: UserData = {
     user: dataUser ? JSON.parse(dataUser) : null,
-    users: dataUsers ? JSON.parse(dataUsers) : null,
-    transactions: dataTransactions ? JSON.parse(dataTransactions) : null,
+    token: token ? token : null,
   };
 
   return JSON.stringify(dataToTransfer);
