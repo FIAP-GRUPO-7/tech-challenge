@@ -92,14 +92,14 @@ cd ../chart && npm install
 
 ```bash
 cd shell && npm start
-cd ../greetingcard && npm start -- --port 8500
-cd ../extractlist && npm start -- --port 8501
-cd ../sidebar && npm start -- --port 8502
-cd ../header && npm start -- --port 8503
-cd ../chart && npm start -- --port 8504
+cd ../greetingcard && npm start
+cd ../extractlist && npm start
+cd ../sidebar && npm start
+cd ../header && npm start
+cd ../chart && npm start
 ```
 
-Acesse: [http://localhost:3000](http://localhost:3000)
+Acesse: [http://localhost:9000](http://localhost:9000)
 
 ---
 
