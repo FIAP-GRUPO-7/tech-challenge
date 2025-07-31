@@ -7,7 +7,7 @@ Projeto desenvolvido como parte do desafio técnico da Fase 2 do curso POSTECH, 
 Este projeto tem como objetivo aprimorar um sistema de gerenciamento financeiro com as seguintes diretrizes:
 
 * Interface atualizada com gráficos e análises financeiras.
-* Sistema de microfrontends com deploy independente.
+* Sistema híbrido, com a funcionalidade de investimentos construída como **microfrontend**.
 * Filtros avançados e busca em listagem de transações.
 * Validação de dados e upload de comprovantes.
 * Containerização com Docker.
@@ -21,23 +21,54 @@ Este projeto tem como objetivo aprimorar um sistema de gerenciamento financeiro 
 * Kauane Gonçalves
 * Manoel Meseque
 
-## 🧩 Estrutura do Projeto
+## 📁 Estrutura Geral do Projeto
 
-O projeto está dividido em múltiplos microfrontends, que se comunicam entre si usando a arquitetura **Module Federation** (Webpack 5):
+### 🔸 Repositório Principal
 
+Repositório: [https://github.com/FIAP-GRUPO-7/tech-challenge](https://github.com/FIAP-GRUPO-7/tech-challenge)
+
+Contém todo o frontend principal (Next.js), autenticação, dashboard, transferências, extrato, entre outras funcionalidades. A única funcionalidade em microfrontend é a parte de **investimentos**.
+
+---
+
+## 🚀 Como Executar o Projeto Principal Localmente
+
+1. Clone o repositório:
+
+```bash
+git clone https://github.com/FIAP-GRUPO-7/tech-challenge.git
+cd tech-challenge
 ```
-mf-tech-challenge/
-├── shell         # Aplicação principal que orquestra os microfrontends
-├── greetingcard  # Microfrontend - Cartão de saudação
-├── extractlist   # Microfrontend - Lista de transações
-├── sidebar       # Microfrontend - Barra lateral de navegação
-├── header        # Microfrontend - Cabeçalho principal
-├── chart         # Microfrontend - Gráficos e dashboard
+
+2. Instale as dependências:
+
+```bash
+npm install
 ```
 
-## 🚀 Como Executar Localmente
+3. Crie um arquivo `.env.local` com a seguinte variável:
 
-### 🔹 Passo a Passo (modo manual sem Docker)
+```env
+NEXT_PUBLIC_API_URL=https://tech-backend-25px.onrender.com
+```
+
+4. Inicie o projeto:
+
+```bash
+npm run dev
+```
+
+Acesse: [http://localhost:3000](http://localhost:3000)
+
+---
+
+## 📦 Executar a Parte de Investimentos (Microfrontend)
+
+A funcionalidade de **investimentos** é implementada como microfrontend e está no repositório separado:
+
+Repositório: [https://github.com/FIAP-GRUPO-7/mf-tech-challenge](https://github.com/FIAP-GRUPO-7/mf-tech-challenge)
+
+### Como Rodar Localmente os Microfrontends
 
 1. Clone o repositório:
 
@@ -60,10 +91,7 @@ cd ../chart && npm install
 3. Execute os microfrontends (em terminais separados):
 
 ```bash
-# Shell principal
 cd shell && npm start
-
-# Microfrontends
 cd ../greetingcard && npm start -- --port 8500
 cd ../extractlist && npm start -- --port 8501
 cd ../sidebar && npm start -- --port 8502
@@ -71,85 +99,55 @@ cd ../header && npm start -- --port 8503
 cd ../chart && npm start -- --port 8504
 ```
 
-Acesse `http://localhost:3000` no navegador.
+Acesse: [http://localhost:3000](http://localhost:3000)
 
 ---
 
 ## 🐳 Como Rodar com Docker Compose
 
-### 🔹 Frontend
-
-A aplicação Next.js está configurada para consumir a API pública já hospedada na Render.
-
-1. Acesse a pasta do frontend:
+### 🔹 Frontend Principal
 
 ```bash
 cd tech-challenge
 ```
 
-2. Execute o projeto com Docker:
-
 ```bash
 docker-compose up --build
 ```
 
-> Acesse o frontend em: [http://localhost:3000](http://localhost:3000)
-
-A variável `NEXT_PUBLIC_API_URL` já está configurada para:
-`https://tech-backend-25px.onrender.com`
-
----
+> A aplicação estará disponível em: [http://localhost:3000](http://localhost:3000)
 
 ### 🔹 Backend (API)
 
-Repositório separado: [https://github.com/kauaneleeal/tech-challenge-api](https://github.com/kauaneleeal/tech-challenge-api)
-
-* A aplicação está hospedada na Render:
-  **🌐 [https://tech-backend-25px.onrender.com](https://tech-backend-25px.onrender.com)**
-
-> Para testar a API diretamente, use essa URL no navegador ou em ferramentas como Postman.
-> Exemplo: [https://tech-backend-25px.onrender.com/user](https://tech-backend-25px.onrender.com/user)
-
-### ✅ Deseja rodar localmente?
-
-1. Clone o repositório da API:
+Repositório: [https://github.com/kauaneleeal/tech-challenge-api](https://github.com/kauaneleeal/tech-challenge-api)
 
 ```bash
 git clone https://github.com/kauaneleeal/tech-challenge-api.git
 cd tech-challenge-api
-```
-2. Execute localmente:
-
-```bash
 docker-compose up --build
 ```
 
-> Acesse: [http://localhost:3001](http://localhost:3001)
+> API: [http://localhost:3001](http://localhost:3001)
 > Swagger: [http://localhost:3001/api-docs](http://localhost:3001/api-docs)
 
-⚠️ **Importante**: `http://localhost:3001` **só funcionará se você rodar a API localmente**.
-Se estiver usando apenas a versão hospedada na Render, acesse via `https://tech-backend-25px.onrender.com`.
+### 🔹 MongoDB
 
----
+Utilizamos o **MongoDB Atlas** em nuvem, já configurado via variável `MONGO_URI` no `.env`:
 
-### 🔹 Banco de Dados (MongoDB)
-
-O MongoDB já está configurado para uso em nuvem (Atlas), com a URI definida no `.env`:
-
-```
-MONGO_URI=mongodb+srv://techchallengegp7:*********@techchallenge.f8m1qcn.mongodb.net/
+```env
+MONGO_URI=mongodb+srv://techchallengegp7:<senha>@techchallenge...mongodb.net/
 ```
 
-✅ Ou seja: **não é necessário subir um container local do MongoDB.**
+✅ Ou seja: **não é necessário subir um container local do MongoDB**
 
 ---
 
 ## 🔐 Autenticação e Segurança
 
-* Token JWT é gerado na autenticação e validado no middleware.
-* Armazenamento do token via **cookies seguros (httpOnly)**.
-* Middleware protege rotas com SSR.
-* Requisições autenticadas enviam `Authorization: Bearer <token>`.
+* Token JWT com validação de expiração.
+* Armazenamento via cookie `httpOnly` seguro.
+* Middleware no frontend para proteger rotas SSR.
+* Requisições autenticadas via `Authorization: Bearer <token>`
 
 ---
 
@@ -174,7 +172,6 @@ Todas as variáveis de ambiente estão preparadas para produção.
 * **TailwindCSS**
 * **Redux Toolkit**
 * **Recharts**
-* **Module Federation**
 * **Docker & Docker Compose**
 * **MongoDB Atlas**
 * **Lucide React & React Icons**
