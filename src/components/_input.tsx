@@ -4,11 +4,16 @@ type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   label?: string;
 };
 
-export const Input: React.FC<InputProps> = ({ label, className, ...rest }) => {
+export const Input: React.FC<InputProps> = ({
+  label,
+  id,
+  className,
+  ...rest
+}) => {
   return (
     <div className="flex flex-col gap-4">
       {label && (
-        <label htmlFor="value" className="font-bold">
+        <label htmlFor={id} className="font-bold">
           {label}
         </label>
       )}

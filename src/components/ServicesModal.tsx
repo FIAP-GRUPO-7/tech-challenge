@@ -1,21 +1,25 @@
-'use client'
-import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
+"use client";
+import React, { useMemo } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Tooltip } from "react-tooltip";
 
 const ServicesModal = () => {
-  const servicos = [
-    { nome: 'Empréstimos', icone: 'emprestimo.png' },
-    { nome: 'Meus Cartões', icone: 'cartoes.png', link: '/cartoes' },
-    { nome: 'Doações', icone: 'doacoes.png' },
-    { nome: 'Pix', icone: 'pix.png' },
-    { nome: 'Seguros', icone: 'seguros.png' },
-    { nome: 'Créditos', icone: 'creditos.png' },
-  ];
+  const servicos = useMemo(
+    () => [
+      { nome: "Empréstimos", icone: "emprestimo.png" },
+      { nome: "Meus Cartões", icone: "cartoes.png", link: "/cartoes" },
+      { nome: "Doações", icone: "doacoes.png" },
+      { nome: "Pix", icone: "pix.png" },
+      { nome: "Seguros", icone: "seguros.png" },
+      { nome: "Créditos", icone: "creditos.png" },
+    ],
+    []
+  );
 
   return (
     <section className="w-full bg-[var(--color-fundo-principal)] rounded-md p-6">
-      <h3 className="text-[var(--color-preto)] text-lg font-semibold mb-4">
+      <h3 className="text-[var(--color-preto)] text-lg font-semibold mb-4 text-dynamic">
         Confira outros serviços disponíveis:
       </h3>
 
@@ -37,20 +41,27 @@ const ServicesModal = () => {
           );
 
           return servico.link ? (
-            <Link key={index} href={servico.link} className="block w-full">
+            <Link key={index} href={servico.link} className="block w-full"       
+              data-tooltip-id="button"
+              data-tooltip-content={`Clique para acessar ${servico.nome}`}
+              data-tooltip-place="bottom"
+              aria-label={`Clique para acessar ${servico.nome}`}>
               {card}
             </Link>
           ) : (
-            <button key={index} type="button" className="w-full">
+            <button key={index} type="button" className="w-full" 
+              data-tooltip-id="button"
+              data-tooltip-content={`Clique para acessar ${servico.nome}`}
+              data-tooltip-place="bottom"
+              aria-label={`Clique para acessar ${servico.nome}`}>
               {card}
             </button>
           );
         })}
       </div>
+      <Tooltip id="button" />
     </section>
   );
 };
 
 export default ServicesModal;
-
-

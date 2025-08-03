@@ -1,11 +1,14 @@
 "use client";
 
-import { useAuth } from "@/context/auth";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo, useContext } from "react";
 import { IoMdClose } from "react-icons/io";
+import { useDispatch } from "react-redux";
+import { logout } from "@/features/auth";
+import ThemeToggle from "./ThemeToggle";
+import { ThemeContext } from "@/context/ThemeContext";
 
 interface DropdownMenuProps {
   children: React.ReactNode;
@@ -14,6 +17,7 @@ interface DropdownMenuProps {
 enum ActionTypeEnum {
   NAVIGATE = "NAVIGATE",
   ACTION = "ACTION",
+  CUSTOM = "CUSTOM",
 }
 
 type ActionTypeValueNavigate = string;
@@ -23,7 +27,8 @@ export const DropdownMenu = ({ children }: DropdownMenuProps) => {
   const [show, setShow] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
-  const { signOut } = useAuth();
+  const dispatch = useDispatch();
+  const { setLightTheme } = useContext(ThemeContext);
 
   // Fecha o menu ao clicar fora
   useEffect(() => {
@@ -41,34 +46,46 @@ export const DropdownMenu = ({ children }: DropdownMenuProps) => {
     setShow(false);
   };
 
-  const options = [
-    {
-      id: crypto.randomUUID(),
-      label: "Minha conta",
-      action: {
-        type: ActionTypeEnum.NAVIGATE,
-        value: "/account",
-      },
-    },
-    {
-      id: crypto.randomUUID(),
-      label: "Configurações",
-      action: {
-        type: ActionTypeEnum.NAVIGATE,
-        value: "/settings",
-      },
-    },
-    {
-      id: crypto.randomUUID(),
-      label: "Sair",
-      action: {
-        type: ActionTypeEnum.ACTION,
-        value: () => {
-          signOut();
+  const options = useMemo(
+    () => [
+      {
+        id: crypto.randomUUID(),
+        label: "Minha conta",
+        action: {
+          type: ActionTypeEnum.NAVIGATE,
+          value: "/account",
         },
       },
-    },
-  ];
+      {
+        id: crypto.randomUUID(),
+        label: "Configurações",
+        action: {
+          type: ActionTypeEnum.NAVIGATE,
+          value: "/settings",
+        },
+      },
+      {
+        id: crypto.randomUUID(),
+        label: "ThemeToggle",
+        action: {
+          type: "CUSTOM",
+          value: null,
+        },
+      },
+      {
+        id: crypto.randomUUID(),
+        label: "Sair",
+        action: {
+          type: ActionTypeEnum.ACTION,
+          value: () => {
+            setLightTheme();
+            dispatch(logout());
+          },
+        },
+      },
+    ],
+    [setLightTheme]
+  );
 
   return (
     <div className="relative inline-block text-left" ref={menuRef}>
@@ -88,6 +105,13 @@ export const DropdownMenu = ({ children }: DropdownMenuProps) => {
           </div>
           <ul className="px-8" role="menu" aria-orientation="vertical">
             {options.map((option, index) => {
+              if (option.action.type === ActionTypeEnum.CUSTOM) {
+                return (
+                  <li key={option.id} className="flex justify-center pt-4 border-b-1 border-white">
+                    <ThemeToggle />
+                  </li>
+                );
+              }
               if (option.action.type === ActionTypeEnum.ACTION) {
                 return (
                   <button
@@ -97,25 +121,26 @@ export const DropdownMenu = ({ children }: DropdownMenuProps) => {
                       "text-center w-full pb-4 cursor-pointer",
                       index > 0 && "pt-4"
                     )}
+                    aria-label={`Clique para ${option.label.toLowerCase()}`}
                   >
                     <li className="">{option.label}</li>
                   </button>
                 );
               }
-
               return (
-                <Link
-                  key={option.id}
-                  href={option.action.value as ActionTypeValueNavigate}
-                  className={cn(
-                    "block px-4 pb-4 text-md text-center text-white border-b-1 border-white hover:border-azul-escuro",
-                    index > 0 && "pt-4",
-                    pathname === option.action.value && "border-azul-escuro"
-                  )}
-                  role="menuitem"
-                >
-                  <li>{option.label}</li>
-                </Link>
+                <li key={option.id}>
+                  <Link
+                    href={option.action.value as ActionTypeValueNavigate}
+                    className={cn(
+                      "block px-4 pb-4 text-md text-center text-white border-b-1 border-white hover:border-azul-escuro",
+                      index > 0 && "pt-4",
+                      pathname === option.action.value && "border-azul-escuro"
+                    )}
+                    role="menuitem"
+                  >
+                    {option.label}
+                  </Link>
+                </li>
               );
             })}
           </ul>

@@ -1,16 +1,26 @@
-import { GreetingCard } from "@/components/DashboardComponents";
-import { ExtractList } from "@/components/DashboardComponents";
-import InvestmentSection from "@/components/InvestmentSection";
+import { Skeleton } from "@/components/_skeleton";
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
+const InvestmentSection = dynamic(
+  () => import("@/components/InvestmentSection")
+);
 
-export default function Home() {
-
+export default function PageInvestments() {
   return (
-    <div className="w-full flex flex-col xl:flex-row col-span-5 gap-4">
+    <section
+      aria-labelledby="investments-section-title"
+      className="w-full flex flex-col xl:flex-row col-span-5 gap-4"
+    >
+      <h2 id="investments-section-title" className="sr-only">
+        Página de investimentos
+      </h2>
       <div className="flex flex-col flex-wrap flex-1 gap-4">
-        <GreetingCard />
-        <InvestmentSection />
+        <Suspense
+          fallback={<Skeleton className="w-full rounded-md sm:h-[306px]" />}
+        >
+          <InvestmentSection />
+        </Suspense>
       </div>
-      <ExtractList />
-    </div>
+    </section>
   );
 }

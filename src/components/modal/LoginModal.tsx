@@ -1,16 +1,22 @@
 "use client";
-
 import { useState, ChangeEvent, FormEvent } from "react";
 import Cadastro from "@/shared/assets/Cadastro.svg";
 import Image from "next/image";
 import Link from "next/link";
-import { useAuth } from "@/context/auth";
+import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { Tooltip } from 'react-tooltip';
+import { login, selectLoading } from "@/features/auth";
+import type { AppDispatch } from "@/store";
 
 interface LoginModalProps {
   onClose: () => void;
 }
 
 export default function LoginModal({ onClose }: LoginModalProps) {
+  const dispatch = useDispatch<AppDispatch>();
+  const loading = useSelector(selectLoading);
+
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -21,7 +27,9 @@ export default function LoginModal({ onClose }: LoginModalProps) {
     password: "",
   });
 
-  const { signIn, error } = useAuth();
+  const [error, setError] = useState("");
+  const router = useRouter();
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setForm((prev) => ({
@@ -47,13 +55,22 @@ export default function LoginModal({ onClose }: LoginModalProps) {
     e.preventDefault();
     if (!validate()) return;
 
+    setError("");
+
     try {
-      await signIn(form.email, form.password);
-      if (!error) {
-        onClose(); // só fecha se login ok
+      await dispatch(login({ email: form.email, password: form.password })).unwrap();
+
+      alert("Login realizado com sucesso!");
+      onClose();
+      router.push("/home");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        setError(err.message || "Erro ao autenticar.");
+      } else {
+        console.error(err);
+        setError("Erro ao autenticar.");
       }
-    } catch (err) {
-      console.error(err);
     }
   };
 
@@ -63,6 +80,10 @@ export default function LoginModal({ onClose }: LoginModalProps) {
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-xl"
+          data-tooltip-id="button"
+          data-tooltip-content="Clique para fechar o modal"
+          data-tooltip-place="bottom"
+          aria-label="Clique para fechar o modal"
         >
           ×
         </button>
@@ -74,7 +95,7 @@ export default function LoginModal({ onClose }: LoginModalProps) {
             height={140}
             className="mx-auto"
           />
-          <h2 className="text-lg font-bold pt-4 text-base">Login</h2>
+          <h2 className="font-bold pt-4 text-base">Login</h2>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 px-6">
@@ -92,6 +113,7 @@ export default function LoginModal({ onClose }: LoginModalProps) {
               className={`mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white ${
                 errors.email ? "border-erro" : "border-cinza-claro"
               }`}
+              aria-label="Digite seu email"
             />
             {errors.email && (
               <p className="text-erro text-xs mt-1">{errors.email}</p>
@@ -112,6 +134,7 @@ export default function LoginModal({ onClose }: LoginModalProps) {
               className={`mt-1 w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white ${
                 errors.password ? "border-erro" : "border-cinza-claro"
               }`}
+              aria-label="Digite sua senha"
             />
             {errors.password && (
               <p className="text-erro text-xs mt-1">{errors.password}</p>
@@ -126,11 +149,17 @@ export default function LoginModal({ onClose }: LoginModalProps) {
           <div className="flex justify-center mt-8">
             <button
               type="submit"
+              disabled={loading}
               className="px-4 py-2 rounded font-bold text-branco bg-azul-claro cursor-pointer"
+              data-tooltip-id="button"
+              data-tooltip-content="Clique para acessar a página inicial"
+              data-tooltip-place="top"
+              aria-label="Clique para acessar a página inicial"
             >
-              Acessar
+              {loading ? "Carregando.." : "Acessar"}
             </button>
           </div>
+          <Tooltip id="button" />
         </form>
       </div>
     </div>
