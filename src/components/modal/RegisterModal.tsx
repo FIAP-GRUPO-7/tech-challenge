@@ -204,7 +204,6 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
               data-tooltip-place="top"
               aria-label="Clique para criar sua conta"
             >
-              Criar conta
               {loading ? "Carregando..." : "Criar conta"}
             </button>
           </div>
