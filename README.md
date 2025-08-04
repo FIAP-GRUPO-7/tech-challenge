@@ -154,7 +154,7 @@ MONGO_URI=mongodb+srv://techchallengegp7:<senha>@techchallenge...mongodb.net/
 ## 🌐 Deploy
 
 * **Frontend:** hospedado na **Vercel**
-  🌍 [https://tech-challenge-git-(sua-branch)-tech-challenge.vercel.app](https://tech-challenge-git-develop-tech-challenge.vercel.app)
+  🌍 [https://tech-challenge-phi.vercel.app/](https://tech-challenge-phi.vercel.app/)
 
 * **API:** hospedada na **Render**
   🌍 [https://tech-backend-25px.onrender.com](https://tech-backend-25px.onrender.com)
